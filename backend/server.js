@@ -1,25 +1,24 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
+import { Socket, Server } from "socket.io";
+import http from "http";
+import { app } from "./app.js";
+import { config } from "dotenv";
 
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-   .then(() => console.log("MongoDB connected"))
-   .catch((err) => console.log(err));
-
-// Sample route
-app.get('/', (req, res) => {
-   res.send("Hello from MERN backend");
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:8000",
+    methods: ["GET", "POST"],
+  },
 });
 
-app.listen(PORT, () => {
-   console.log(`Server is running on port ${PORT}`);
+config({
+  path: "./config.env",
+});
+
+io.on("connection", (socket) => {
+  console.log("USER CONNECTED:", socket.id);
+});
+
+server.listen(8000, () => {
+  console.log("Server is running on port 8000");
 });
