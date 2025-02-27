@@ -7,7 +7,6 @@ import "../styles/TopBar.css";
 const TopBar = () => {
   return (
     <div className="top-bar">
-      <Container fluid>
         <Container>
           <Row className="align-items-center">
             <Col md={3} className="d-flex align-items-center">
@@ -35,7 +34,6 @@ const TopBar = () => {
             </Col>
           </Row>
         </Container>
-      </Container>
     </div>
   );
 };

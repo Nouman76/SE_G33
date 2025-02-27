@@ -1,55 +1,72 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaEye, FaEyeSlash} from "react-icons/fa"; // Icons
-import "../styles/Login.css"; // Ensure styling matches
+import { Container, Row} from "bootstrap-4-react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import "../styles/Login.css"; 
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
   const togglePasswordVisibility = () => {
-    setPasswordVisible((prev) => !prev);
+    setPasswordVisible(!passwordVisible);
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
-    <div className="login-page d-flex flex-column align-items-center justify-content-center vh-100">
-      <h2 className="text-center font-weight-bold">Sign In</h2>
+    <div className="login-main">
+      <Container>
+        <Row>
+          <div className="form-wrapper">
+              <h2 className="login-title">Sign In</h2>
 
-      {/* Input Fields */}
-      <div className="login-form">
-        <input type="email" placeholder="Email" className="form-control rounded-pill mb-3" />
+              <div className="input-wrapper">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="custom-input"
+                />
+              </div>
 
-        <div className="position-relative">
-          <input
-            type={passwordVisible ? "text" : "password"}
-            placeholder="Password"
-            className="form-control rounded-pill"
-          />
-          <span className="password-toggle" onClick={togglePasswordVisibility}>
-            {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-          </span>
-        </div>
+              <div className="password-wrapper">
+                <input
+                  type={passwordVisible ? "text" : "password"}
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="custom-input"
+                />
+                <span className="password-toggle" onClick={togglePasswordVisibility}>
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
 
-        <p className="text-right mt-2">
-          Forgot your password? <Link to="/reset-password" className="text-success">Click Here</Link>
-        </p>
+              <div className="forgot-password">
+                <Link to="/reset-password" className="forgot-link">Forgot your password?</Link>
+              </div>
 
-        <button className="btn btn-warning w-100 rounded-pill mt-3">Sign In</button>
+              <div className="button-wrapper">
+                <button className="custom-button">Sign In</button>
+              </div>
 
-        <div className="text-center mt-3">Or</div>
+              <div className="or-text">Or</div>
 
-        {/* Social Login Buttons
-        <button className="btn btn-light w-100 rounded-pill mt-2 d-flex align-items-center justify-content-center">
-          <FaGoogle className="mr-2" /> Sign In with Gooling
-        </button>
-
-        <button className="btn btn-light w-100 rounded-pill mt-2 d-flex align-items-center justify-content-center">
-          <FaCloud className="mr-2" /> Sign In with Banana Cloud
-        </button> */}
-      </div>
-
-      <p className="mt-3">
-        Don't have an account yet? <Link to="/signup" className="text-success">Sign Up</Link>
-      </p>
+              <div className="signup-text">
+                Don't have an account? <Link to="/signup" className="signup-link">Sign Up</Link>
+              </div>
+          </div>
+        </Row>
+      </Container>
     </div>
   );
 };

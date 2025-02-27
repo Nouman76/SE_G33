@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Container, Row, Col } from "bootstrap-4-react";
 import "../styles/Contactus.css";
 
 const ContactUs = () => {
@@ -12,76 +11,74 @@ const ContactUs = () => {
   };
 
   return (
-    <Container fluid className="contact-us-page py-5">
-      <Row className="justify-content-center">
-        <Col md={12} className="text-center">
-          <h2 className="contact-us-title">Contact Us</h2>
-        </Col>
-      </Row>
+    <div className="contact-page">
+      <Container>
+        <Row>
+          <Col>
+            <div className="contact-title">Contact Us</div>
+          </Col>
+        </Row>
 
-      <Row className="justify-content-center">
-        <Col md={10} className="text-center">
-          <h4 className="contact-us-leave-message">Leave a Message</h4>
-          <div className="contact-us-yellow-underline"></div>
-          <p className="contact-us-text-muted">
-            If you have any questions, send us a message below, and we will get back to you.
-          </p>
-        </Col>
-      </Row>
+        <Row>
+          <Col md={12}>
+            <div className="contact-subtitle">Leave a Message</div>
+            <div className="yellow-underline"></div>
+            <p className="contact-description">
+              If you have any questions, please send us a message using the adjacent form, and we will get back to you as soon as possible.
+            </p>
+          </Col>
+        </Row>
 
-      <Row className="justify-content-center">
-        <Col md={10} lg={8}>
-          <Form className="contact-us-form">
-            <Row>
-              <Col md={6} className="mb-3">
-                <Form.Control className="contact-us-form-control" type="text" placeholder="Name" required />
-              </Col>
-              <Col md={6} className="mb-3">
-                <Form.Control className="contact-us-form-control" type="email" placeholder="Email" required />
-              </Col>
-            </Row>
+        <div className="contact-form">
+          <Row>
+            <Col md={6}>
+              <input type="text" placeholder="Name" required />
+            </Col>
+            <Col md={6}>
+              <input type="email" placeholder="Email" required />
+            </Col>
+          </Row>
 
-            <Row>
-              <Col md={6} className="mb-3">
-                <Form.Control className="contact-us-form-control" type="text" placeholder="Address" required />
-              </Col>
-              <Col md={6} className="mb-3">
-                <Form.Control className="contact-us-form-control"
-                  type="text"
-                  placeholder="Phone Number"
-                  value={phoneNumber}
-                  onChange={handlePhoneChange}
-                  maxLength="15"
-                  required
-                />
-              </Col>
-            </Row>
+          <Row>
+            <Col md={6}>
+              <input type="text" placeholder="Address" required />
+            </Col>
+            <Col md={6}>
+              <input
+                type="text"
+                placeholder="Phone Number"
+                value={phoneNumber}
+                onChange={handlePhoneChange}
+                maxLength="15"
+                required
+              />
+            </Col>
+          </Row>
 
-            <Form.Control className="contact-us-message-box" as="textarea" rows="4" placeholder="Message" required />
+          <Row>
+            <Col md={12}>
+              <textarea className="message-box" placeholder="Message" rows="4" required></textarea>
+            </Col>
+          </Row>
 
-            <Button variant="warning" className="contact-us-btn-warning" type="submit">
-              Send Message
-            </Button>
-          </Form>
-        </Col>
-      </Row>
+          <button className="custom-btn">Send Message</button>
+        </div>
 
-      <Row className="mt-5">
-        <Col md={12} className="px-0">
-          <div className="contact-us-map-container">
-            <iframe
-              title="Google Map"
-              src="https://www.google.com/maps/embed?..."
-              width="100%"
-              height="400"
-              style={{ border: 0, filter: "grayscale(100%)" }}
-              allowFullScreen
-              loading="lazy"
-            ></iframe>
-          </div>
-        </Col>
-      </Row>
-    </Container>
+        {/* Google Map Section */}
+        <Row>
+          <Col>
+            <div className="map-container">
+              <iframe
+                title="Google Map"
+                src="https://www.google.com/maps/embed?..."
+                allowFullScreen
+                loading="lazy"
+              ></iframe>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 

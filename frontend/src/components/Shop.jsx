@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Button, Table, Card } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Container, Row, Col, Form, Button, Table, Card } from "bootstrap-4-react";
 import "../styles/Shop.css";
 
 const Shop = () => {

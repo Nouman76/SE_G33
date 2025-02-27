@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "bootstrap-4-react";
-import SearchIcon from "../assets/search.svg"; // Replace with your actual image path
+import SearchIcon from "../assets/search.svg";
 import "../styles/SearchBar.css";
 
 const SearchBar = () => {

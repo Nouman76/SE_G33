@@ -3,8 +3,7 @@
   background-color: #001c30;
   color: #ffffff;
 }
-.navu 
-{
+.navu {
   justify-content: center;
   align-content: center;
   display: flex;
@@ -36,19 +35,28 @@
   font-weight: 500;
   color: #fff;
   cursor: pointer;
+  border-radius: 50px;
+  padding: 5px 15px;
 }
 
 .nav-links li button:hover {
-  color: #f4ce14;
+  background-color: #f4ce14;
+  color: #001c30;
 }
 
-.nav-icons
-{
+/* Active button remains highlighted */
+.active-btn {
+  background-color: #f4ce14;
+  color: #001c30;
+}
+
+.nav-icons {
   display: flex;
   align-content: center;
   justify-content: space-between;
   gap: 20px;
 }
+
 .nav-icons img {
   width: 24px;
   height: 24px;
@@ -83,38 +91,28 @@
   color: #f4ce14;
 }
 
-.all-category-btn{
+.all-category-btn {
   background-color: #f4ce14;
-      height: 54px;
-      display: flex;
-      align-content: center;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-  }
-  .all-category-btn .icon-block{
-      margin-right: 10px;
-  }
-  .nav-links li button {
-    border-radius: 50px;
-    padding: 5px 15px;
-}
-.nav-links li button:hover
-{
-    background-color: #F4CE14;
-    color: #001c30;
+  height: 54px;
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
-.icons-section
-{
+.all-category-btn .icon-block {
+  margin-right: 10px;
+}
+
+.icons-section {
   display: flex;
   justify-content: flex-end;
 }
-.nav-icons
-{
+
+.nav-icons {
   justify-content: space-between;
   align-content: center;
   flex-wrap: wrap;
-
 }

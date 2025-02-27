@@ -29,9 +29,7 @@
 .haiuyyy{
     background-color: #2e726b;
     border-color: #2e726b;
-    /* when i hover it goes blue make hover yellow */
     cursor: pointer;
-    ;
 }
 .haiuyyy:hover {
     background-color: #2e726b; /* Slightly darker yellow for hover effect */
@@ -101,8 +99,6 @@
     margin-top: 20px;
 }
 
-/* Buttons - Unified Styling */
-button,
 .checkout-btn,
 .buy-btn {
     width: 100%;
@@ -117,8 +113,6 @@ button,
     transition: background-color 0.3s ease-in-out;
 }
 
-
-button:hover,
 .checkout-btn:hover,
 .buy-btn:hover {
     background-color: #e6a800;
