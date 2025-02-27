@@ -26,19 +26,19 @@ const Navbar = () => {
             <Col md={8} className="navu">
               <ul className="nav-links list-unstyled">
                 <li>
-                  <button onClick={() => window.location.href = "#home"}>Home</button>
+                  <button onClick={() => window.location.href = "./"}>Home</button>
                 </li>
                 <li>
                   <button onClick={() => window.location.href = "#about"}>About</button>
                 </li>
                 <li>
-                  <button onClick={() => window.location.href = "#shop"}>Shop</button>
+                  <button onClick={() => window.location.href = "./shop"}>Shop</button>
                 </li>
                 <li>
                   <button onClick={() => window.location.href = "#blog"}>Blog</button>
                 </li>
                 <li>
-                  <button onClick={() => window.location.href = "#contact"}>Contact</button>
+                  <button onClick={() => window.location.href = "./contact"}>Contact</button>
                 </li>
               </ul>
             </Col>
@@ -47,9 +47,15 @@ const Navbar = () => {
               <div className="nav-icons">
                 <img src={FavouritesIcon} alt="Favourites" />
                 <img src={CartIcon} alt="Cart" />
-                <img src={ProfileIcon} alt="Profile" />
+                <img
+                  src={ProfileIcon}
+                  alt="Profile"
+                  className="clickable-icon"
+                  onClick={() => (window.location.href = "/signup")}
+                />
               </div>
             </Col>
+
 
             <Col xs={12} className="d-md-none text-center mt-3">
               <button className="btn btn-primary nav-toggle-btn" onClick={toggleNav}>
