@@ -1,4 +1,5 @@
 import React from 'react';
+import {Container} from 'bootstrap-4-react';
 import '../styles/Footer.css';
 import LinkedInIcon from '../assets/Linkedin.svg';
 import FacebookIcon from '../assets/Facebook.svg';
@@ -6,8 +7,10 @@ import InstagramIcon from '../assets/Instagram.svg';
 
 const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="footer-container">
+ 
+  <div className="footer">
+    <div className="footer-container">
+      <Container>
         <div className="footer-section">
           <h2 className="logo">ECOMMERCE</h2>
           <p className="footer-description">
@@ -19,6 +22,7 @@ const Footer = () => {
             <img src={InstagramIcon} alt="Instagram" className="social-icon" />
           </div>
         </div>
+        </Container>
         <div className="footer-section">
           <h4 className="footer-heading">Shop</h4>
           <ul className="footer-links">
@@ -51,7 +55,9 @@ const Footer = () => {
         <p className="footer-legal">© qommarket.xom. All rights reserved</p>
         <a href="/terms-and-conditions" className="footer-terms">Terms & Condition</a>
       </div>
-    </footer>
+    </div>
+
+
   );
 };
 

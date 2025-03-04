@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Button, Table, Card } from "bootstrap-4-react";
+import { Container, Row, Col } from "bootstrap-4-react";
+import emailjs from "emailjs-com"; // Import EmailJS
 import "../styles/Shop.css";
+import successIcon from "../assets/Group.svg";
+import trashIcon from "../assets/trash.svg";
 
 const Shop = () => {
   const [cartItems, setCartItems] = useState([
@@ -14,185 +17,358 @@ const Shop = () => {
 
   const [step, setStep] = useState(1);
   const [customerDetails, setCustomerDetails] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     address: "",
-    paymentMethod: "Credit Card",
+    city: "",
+    zip: "",
+    phone: "",
+    email: "",
   });
 
   const [orderDetails, setOrderDetails] = useState(null);
+  const deliveryCharge = 10.0;
+
+  const calculateTotalPrice = (items) => {
+    return items.reduce((acc, item) => acc + item.price * item.qty, 0);
+  };
 
   const handleRemove = (id) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const emailData = {
+      to_email: "noumanasad27@gmail.com",
+      from_name: `${customerDetails.firstName} ${customerDetails.lastName}`,
+      address: customerDetails.address,
+      city: customerDetails.city,
+      zip: customerDetails.zip,
+      phone: customerDetails.phone,
+      email: customerDetails.email,
+    };
+
+    emailjs
+      .send(
+        "YOUR_SERVICE_ID",
+        "YOUR_TEMPLATE_ID",
+        emailData,
+        "YOUR_PUBLIC_KEY"
+      )
+      .then((response) => {
+        alert("Details Sent Successfully!");
+        handleConfirmOrder(); // Proceed to next step after successful submission
+      })
+      .catch((error) => {
+        alert("Error Sending Email: " + error.text);
+      });
+  };
+
   const handleConfirmOrder = () => {
-    const total = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0) + 10; // Subtotal + Delivery Fee
+    const total = calculateTotalPrice(cartItems) + deliveryCharge;
     setOrderDetails({
       items: cartItems,
-      name: customerDetails.name,
+      name: `${customerDetails.firstName} ${customerDetails.lastName}`,
       address: customerDetails.address,
-      paymentMethod: customerDetails.paymentMethod,
+      paymentMethod: "Cash on Delivery",
       total,
     });
+
     setStep(3);
   };
 
   return (
-    <Container className="shop-container">
-      <h2 className="cart-title">
-        {step === 1 ? "Shopping Cart" : step === 2 ? "Shipping & Checkout" : "Order Confirmation"}
-      </h2>
+    <div className="shop-container">
+      <Container>
+        {/* Section Headings */}
+        <div className="cart-title">Cart</div>
 
-      <div className="progress-steps">
-        <span className={`step ${step === 1 ? "active" : ""}`}>1. Shopping Cart</span>
-        <span className={`step ${step === 2 ? "active" : ""}`}>2. Shipping & Checkout</span>
-        <span className={`step ${step === 3 ? "active" : ""}`}>3. Confirmation</span>
-      </div>
-
-      {step === 1 && (
-        <>
+        {/* Progress Indicator */}
+        <div className="progress-container">
           <Row>
-            <Col md={8}>
-              <Table className="cart-table">
-                <thead>
-                  <tr>
-                    <th>Product Details</th>
-                    <th>Price</th>
-                    <th>QTY</th>
-                    <th>Subtotal</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cartItems.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.name}</td>
-                      <td>${item.price.toFixed(2)}</td>
-                      <td>{item.qty}</td>
-                      <td>${(item.price * item.qty).toFixed(2)}</td>
-                      <td>
-                        <Button variant="danger" size="sm" onClick={() => handleRemove(item.id)}>
-                          🗑
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Col>
-            <Col md={4}>
-              <Card className="summary-card">
-                <Card.Body>
-                  <h5>Total Cart</h5>
-                  <p>
-                    Subtotal: <strong>${cartItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2)}</strong>
-                  </p>
-                  <p>Delivery Charge: <strong>$10.00</strong></p>
-                  <h5>
-                    Total: <strong>${(cartItems.reduce((acc, item) => acc + item.price * item.qty, 0) + 10).toFixed(2)}</strong>
-                  </h5>
-                  <Button className="checkout-btn" onClick={() => setStep(2)}>Checkout</Button>
-                </Card.Body>
-              </Card>
-            </Col>
+            {["Shopping Cart", "Shipping & Checkout", "Confirmation"].map((title, index) => (
+              <Col md={4} key={index}>
+                <div className={`progress-step ${step === index + 1 ? "active" : ""}`}>
+                  <span className="step-number">{index + 1}</span>
+                  <div className="step-text">{title}</div>
+                </div>
+                <div className={`step-divider ${step === index + 1 ? "active-divider" : ""}`}></div>
+              </Col>
+            ))}
           </Row>
-        </>
-      )}
+        </div>
 
-      {step === 2 && (
-        <Row>
-          <Col md={8}>
-            <Card className="checkout-card">
-              <Card.Body>
-                <h5>Shipping Information</h5>
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Full Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={customerDetails.name}
-                      onChange={(e) => setCustomerDetails({ ...customerDetails, name: e.target.value })}
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Address</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter your address"
-                      value={customerDetails.address}
-                      onChange={(e) => setCustomerDetails({ ...customerDetails, address: e.target.value })}
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Payment Method</Form.Label>
-                    <Form.Select
-                      value={customerDetails.paymentMethod}
-                      onChange={(e) => setCustomerDetails({ ...customerDetails, paymentMethod: e.target.value })}
-                    >
-                      <option>Credit Card</option>
-                      <option>PayPal</option>
-                      <option>Cash on Delivery</option>
-                    </Form.Select>
-                  </Form.Group>
-                  <Button className="mt-3" variant="secondary" onClick={() => setStep(1)}>Back to Cart</Button>
-                  <Button className="mt-3ms-2" onClick={handleConfirmOrder}>Confirm Order</Button>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      )}
+        {/* 🛒 Shopping Cart Section */}
+        {step === 1 && (
+            <div className="cart-step">
+            <Row>
+              <Col md={8}>
+                <div className="products-in-cart">
+                  {/* Cart Header */}
+                  <Row className="cart-header">
+                    <Col md={6} className="cart-header-item">Product Details</Col>
+                    <Col md={2} className="cart-header-item">Price</Col>
+                    <Col md={1} className="cart-header-item">QTY</Col>
+                    <Col md={2} className="cart-header-item">Subtotal</Col>
+                    <Col md={1} className="cart-header-item text-center"></Col>
+                  </Row>
 
-      {step === 3 && orderDetails && (
-        <Card className="confirmation-card">
-          <Card.Body>
-            <h4>🎉 Thank You for Your Purchase!</h4>
-            <p>Your order has been successfully placed.</p>
-            <p>A confirmation email will be sent shortly.</p>
+                  {/* Cart Items */}
+                  {cartItems.map((item) => (
+                    <Row key={item.id} className="cart-item">
+                      {/* Product Details */}
+                      <Col md={6} className="cart-item-details">
+                        <div className="cart-item-name">{item.name}</div>
+                      </Col>
 
-            <h5>Order Summary:</h5>
-            <ul>
-              {orderDetails.items.map((item) => (
-                <li key={item.id}>
-                  {item.name} - ${item.price.toFixed(2)} x {item.qty} = ${(item.price * item.qty).toFixed(2)}
-                </li>
+                      {/* Price */}
+                      <Col md={2} className="cart-item-price">${item.price.toFixed(2)}</Col>
+
+                      {/* Quantity */}
+                      <Col md={1} className="cart-item-qty">{item.qty}</Col>
+
+                      {/* Subtotal */}
+                      <Col md={2} className="cart-item-subtotal">${(item.price * item.qty).toFixed(2)}</Col>
+
+                      {/* Remove Button */}
+                      <Col md={1} className="cart-item-remove text-center" onClick={() => handleRemove(item.id)}>
+                        <img src={trashIcon} alt="Remove" className="trash-icon" />
+                      </Col>
+                    </Row>
+                  ))}
+                </div>
+              </Col>
+
+
+
+              {/* Cart Summary Section */}
+              <Col md={4}>
+                <div className="cart-summary">
+                  <div className="cart-weight">Total Cart</div>
+                  <div className="divider"></div>
+                  <div className="summary-section">
+                    <div className="summary-title">Subtotal:</div>
+                    <span className="summary-value">${calculateTotalPrice(cartItems).toFixed(2)}</span>
+                  </div>
+                  <div className="summary-section">
+                    <div className="summary-title">Delivery Charge:</div>
+                    <span className="summary-value">${deliveryCharge.toFixed(2)}</span>
+                  </div>
+                  <div className="divider"></div>
+                  <div className="summary-section total">
+                    <div className="summary-title">Total:</div>
+                    <span className="summary-value">${(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
+                  </div>
+                  <div className="checkout-btn" onClick={() => setStep(2)}>Checkout</div>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        )}
+
+        {/* 🚚 Shipping & Checkout Section */}
+        {step === 2 && (
+         <div className="checkout-step">
+         <Row>
+           {/* Billing Details Section */}
+           <Col md={8}>
+             <div className="billing-details">
+               <Row>
+                 <div className="billing-title">Billing Details</div>
+               </Row>
+       
+               <div className="divider"></div>
+       
+               <div className="get-details">
+                 {/* First Name & Last Name */}
+                 <Row>
+                   <Col md={6}>
+                     <div className="input-container">
+                       <input
+                         type="text"
+                         placeholder="First Name"
+                         value={customerDetails.firstName}
+                         onChange={(e) => setCustomerDetails({ ...customerDetails, firstName: e.target.value })}
+                         required
+                       />
+                     </div>
+                   </Col>
+                   <Col md={6}>
+                     <div className="input-container">
+                       <input
+                         type="text"
+                         placeholder="Last Name"
+                         value={customerDetails.lastName}
+                         onChange={(e) => setCustomerDetails({ ...customerDetails, lastName: e.target.value })}
+                         required
+                       />
+                     </div>
+                   </Col>
+                 </Row>
+       
+                 {/* Address */}
+                 <Row>
+                   <Col md={12}>
+                     <div className="input-container">
+                       <input
+                         type="text"
+                         placeholder="Address"
+                         value={customerDetails.address}
+                         onChange={(e) => setCustomerDetails({ ...customerDetails, address: e.target.value })}
+                         required
+                       />
+                     </div>
+                   </Col>
+                 </Row>
+       
+                 {/* City & Postal Code */}
+                 <Row>
+                   <Col md={6}>
+                     <div className="input-container">
+                       <input
+                         type="text"
+                         placeholder="Town/City"
+                         value={customerDetails.city}
+                         onChange={(e) => setCustomerDetails({ ...customerDetails, city: e.target.value })}
+                         required
+                       />
+                     </div>
+                   </Col>
+                   <Col md={6}>
+                     <div className="input-container">
+                       <input
+                         type="text"
+                         placeholder="Postal Code"
+                         value={customerDetails.zip}
+                         onChange={(e) => setCustomerDetails({ ...customerDetails, zip: e.target.value })}
+                         required
+                       />
+                     </div>
+                   </Col>
+                 </Row>
+       
+                 {/* Phone & Email */}
+                 <Row>
+                   <Col md={6}>
+                     <div className="input-container">
+                       <input
+                         type="text"
+                         placeholder="Phone Number"
+                         value={customerDetails.phone}
+                         onChange={(e) => setCustomerDetails({ ...customerDetails, phone: e.target.value })}
+                         required
+                       />
+                     </div>
+                   </Col>
+                   <Col md={6}>
+                     <div className="input-container">
+                       <input
+                         type="email"
+                         placeholder="Email"
+                         value={customerDetails.email}
+                         onChange={(e) => setCustomerDetails({ ...customerDetails, email: e.target.value })}
+                         required
+                       />
+                     </div>
+                   </Col>
+                 </Row>
+               </div>
+       
+               <div className="divider"></div>
+       
+               {/* Save Button */}
+               <div className="save-btn" onClick={handleSubmit}>Save</div>
+             </div>
+           </Col>
+       
+           {/* Shopping Cart Summary Section */}
+           <Col md={4}>
+               <div className="cart-summary">
+                  <div className="cart-weight">Total Cart</div>
+                  <div className="divider"></div>
+                  <div className="summary-section">
+                    <div className="summary-title">Subtotal:</div>
+                    <span className="summary-value">${calculateTotalPrice(cartItems).toFixed(2)}</span>
+                  </div>
+                  <div className="summary-section">
+                    <div className="summary-title">Delivery Charge:</div>
+                    <span className="summary-value">${deliveryCharge.toFixed(2)}</span>
+                  </div>
+                  <div className="divider"></div>
+                  <div className="summary-section total">
+                    <div className="summary-title">Total:</div>
+                    <span className="summary-value">${(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
+                  </div>
+                  <div className="checkout-btn" onClick={() => setStep(3)}>Place Order</div>
+                </div>
+           </Col>
+         </Row>
+       </div>
+        )}
+
+        {/* ✅ Order Confirmation Section */}
+        {step === 3 && (
+          <div className="confirmation-step">
+            {/* Success Message Block */}
+            <div className="order-success">
+              <img src={successIcon} alt="Success" className="success-icon" />
+              <div className="success-title">Your Order Has Been Fulfilled</div>
+              <div className="success-subtext">I'm grateful. We've received your order.</div>
+            </div>
+
+            {/* Order Summary Block */}
+            <div className="order-summary">
+              <div className="summary-title">Order Details</div>
+              <div className="divider"></div>
+
+              {/* Order Items List */}
+              {cartItems.map((item, index) => (
+                <div key={index} className="order-item">
+                  <div className="item-label">Item Name:</div>
+                  <div className="item-name">{item.name}</div>
+                </div>
               ))}
-            </ul>
-            <p><strong>Total: </strong>${orderDetails.total.toFixed(2)}</p>
-            <p><strong>Customer Name:</strong> {orderDetails.name}</p>
-            <p><strong>Delivery Address:</strong> {orderDetails.address}</p>
-            <p><strong>Payment Method:</strong> {orderDetails.paymentMethod}</p>
 
-            <Button className="haiuyyy"onClick={() => setStep(1)}>Back to Shop</Button>
-            
-            <Button className="haiuyyy1">Track Your Order</Button>
-          </Card.Body>
-        </Card>
-      )}
+              {/* Subtotal */}
+              <div className="order-item">
+                <div className="item-label">Subtotal:</div>
+                <div className="item-value">${calculateTotalPrice(cartItems).toFixed(2)}</div>
+              </div>
 
-      <h3 className="popular-title">Popular Products</h3>
-      <Row>
-        {[
-          { name: "Headset T50RP MK3N - Black and Red", sold: "200", price: "100" },
-          { name: "Joystick Game Controller", sold: "10", price: "100" },
-          { name: "Japple iPhone X 256GB 3GB RAM", sold: "245", price: "100" },
-          { name: "HBEATS SOLO PRO 1 Wireless Headphone", sold: "1K+", price: "100" },
-        ].map((product, index) => (
-          <Col md={3} key={index}>
-            <Card className="popular-product">
-              <Card.Body>
-                <span className="rating">⭐ 5.0</span>
-                <h6>{product.name}</h6>
-                <p>{product.sold} items sold</p>
-                <h5>${product.price}</h5>
-                <Button className="buy-btn">Buy</Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    </Container>
+              {/* Delivery Charge */}
+              <div className="order-item">
+                <div className="item-label">Delivery Charge:</div>
+                <div className="item-value">${deliveryCharge.toFixed(2)}</div>
+              </div>
+
+              {/* Total */}
+              <div className="order-item">
+                <div className="item-label">Total:</div>
+                <div className="total-price">
+                  ${(+calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}
+                </div>
+              </div>
+
+              <div className="divider"></div>
+
+              {/* Placeholder for Name & Address */}
+              <div className="order-item">
+                <div className="item-label">Name:</div>
+                <div className="item-value">{customerDetails.firstName} {customerDetails.lastName}</div>
+              </div>
+
+              <div className="order-item">
+                <div className="item-label">Address:</div>
+                <div className="item-value">{customerDetails.address}, {customerDetails.city}</div>
+              </div>
+              <div className="track-order-btn">Track Your Order</div>
+            </div>
+          </div>
+        )}
+      </Container>
+    </div>
   );
 };
 
