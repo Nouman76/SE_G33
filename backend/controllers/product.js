@@ -19,14 +19,28 @@ export const createProduct = async (req, res) => {
 };
 
 // View All Products
+// View All Products OR Search by Name/Category
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find(); // Fetch all products from DB
+    const { search } = req.query;
+    let query = {};
+
+    if (search) {
+      query = {
+        $or: [
+          { name: { $regex: search, $options: "i" } }, // Case-insensitive search by name
+          { category: { $regex: search, $options: "i" } }, // Case-insensitive search by category
+        ],
+      };
+    }
+
+    const products = await Product.find(query); // Fetch products based on search
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: "Error fetching products!", error: error.message });
   }
 };
+
 
 // Get a Single Product by ID
 export const getProductById = async (req, res) => {

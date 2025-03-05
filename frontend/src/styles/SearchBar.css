@@ -69,6 +69,21 @@
     height: 18px;
     margin-right: 8px;
   }
+
+  .search-results
+  {
+    border: 1px solid #ccc;
+    overflow: scroll;
+    max-height: 140px;
+    margin: 2px 195px;
+    border-radius: 15px;
+    background-color: #f5f7f8;
+  }
+
+  .search-result-item
+  {
+    padding: 5px 20px;
+  }
   
   /* Responsive */
   @media (max-width: 768px) {
