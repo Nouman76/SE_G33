@@ -1,30 +1,53 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer'; 
-import Home from './components/Home';
-import ShopCategory from './components/ShopCategory';
-import Signup from './components/Signup';
-import Login from './components/Login';
-import ContactUs from './components/Contactus'; // Import ContactUs
-import Shop from './components/Shop'; // Import Shop
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer"; 
+import Home from "./components/Home";
+import ShopCategory from "./components/ShopCategory";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
+import ContactUs from "./components/Contactus";
+import Shop from "./components/Shop";
+import Admin from "./components/Admin";
+import AdminDashboard from "./components/Admindashboard";
+import AddProduct from "./components/Addproduct";
+import DeleteProduct from "./components/Deleteproduct";
+import ViewProducts from "./components/Viewproduct";
+import "./App.css";
+
+function AppContent() {
+  const location = useLocation();
+  
+  // Hide Header and Footer on all admin-related pages
+  const isAdminPage = location.pathname.startsWith("/admin");
+
+  return (
+    <div className="App">
+      {!isAdminPage && <Header />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/shopcategory" element={<ShopCategory />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/shop" element={<Shop />} />
+        
+        {/* Admin-related routes without Header/Footer */}
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admindashboard" element={<AdminDashboard />} />
+        <Route path="/admin/add-product" element={<AddProduct />} />
+        <Route path="/admin/delete-product" element={<DeleteProduct />} />
+        <Route path="/admin/view-products" element={<ViewProducts />} />
+      </Routes>
+      {!isAdminPage && <Footer />}
+    </div>
+  );
+}
 
 function App() {
   return (
     <Router>
-      <div className="App">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/shopcategory" element={<ShopCategory />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/contact" element={<ContactUs />} /> {/* Add ContactUs */}
-          <Route path="/shop" element={<Shop />} /> {/* Add Shop */}
-        </Routes>
-        <Footer /> 
-      </div>
+      <AppContent />
     </Router>
   );
 }

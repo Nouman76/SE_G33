@@ -1,0 +1,30 @@
+.view-products-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.view-products-list {
+    list-style: none;
+    padding: 0;
+}
+
+.view-products-item {
+    background: white;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.view-products-item strong {
+    color: #333;
+}
+
+.view-products-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
