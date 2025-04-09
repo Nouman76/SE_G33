@@ -16,6 +16,7 @@ import ViewProducts from "./components/Viewproduct";
 import SellerSignup from "./components/SellerSignup";
 import ShopPage from "./components/ShopPage";
 import Profile from "./components/Profile";
+import NearestPetCare from './components/NearestPetCare';
 
 import "./App.css";
 
@@ -34,6 +35,7 @@ function AppContent() {
         <Route path="/shopcategory" element={<ShopCategory />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/nearestpetcare" element={<NearestPetCare />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/shoppage" element={<ShopPage />} />

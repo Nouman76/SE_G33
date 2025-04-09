@@ -5,6 +5,8 @@ import FavouritesIcon from "../assets/heart.svg";
 import CartIcon from "../assets/bag.svg";
 import ProfileIcon from "../assets/profile.svg";
 import "../styles/Navbar.css";
+import { Link } from 'react-router-dom';
+
 
 const Navbar = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
@@ -30,9 +32,14 @@ const Navbar = () => {
     <div className="custom-navbar">
       <Container>
         <Row>
-          <Col md={2} className="all-category-btn">
-            <span>Nearby Pet Hospitals</span>
-          </Col>
+        
+
+<Col md={2} className="all-category-btn">
+  <Link to="/nearestpetcare">
+    <span>Nearby Pet Hospitals</span>
+  </Link>
+</Col>
+
 
           <Col md={8} className="navu">
             <ul className="nav-links list-unstyled">
