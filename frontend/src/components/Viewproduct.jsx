@@ -12,14 +12,31 @@ const ViewProducts = () => {
     fetchProducts();
   }, []);
 
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/products");
-      setProducts(response.data);
-    } catch (error) {
-      alert("Error fetching products!");
-    }
-  };
+   const fetchProducts = async () => {
+     try {
+       const sellerData = localStorage.getItem("seller");
+   
+       if (!sellerData) {
+         alert("Seller data not found! Please log in again.");
+         return;
+       }
+   
+       const seller = JSON.parse(sellerData); // Convert string to object
+       const sellerId = seller._id; // Extract seller ID
+   
+       console.log("Seller ID:", sellerId);
+   
+       if (!sellerId) {
+         alert("Seller ID not found! Please log in again.");
+         return;
+       }
+   
+       const response = await axios.get(`http://localhost:8000/products?sellerId=${sellerId}`);
+       setProducts(response.data);
+     } catch (error) {
+       alert("Error fetching products!");
+     }
+   };
 
   const handleIncreaseStock = async (id, stock) => {
     try {
@@ -53,6 +70,7 @@ const ViewProducts = () => {
   };
 
   const handleEdit = (product) => {
+    console.log("Editing product:", product); 
     setEditingProduct(product._id);
     setEditedProduct(product);
   };
@@ -91,7 +109,8 @@ const ViewProducts = () => {
         
         <div className="icons">
           <FaTrash className="icon" onClick={() => handleDelete(product._id)} />
-          <FaEdit className="icon" onClick={() => handleEdit(product)} />
+          <FaEdit className="icon" onClick={() => { console.log("Edit button clicked"); handleEdit(product); }} />
+
         </div>
       </div>
     ))}

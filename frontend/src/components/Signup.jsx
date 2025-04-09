@@ -1,16 +1,22 @@
 import React, { useState } from "react";
-import { Container, Row} from "bootstrap-4-react";
+import { Link } from "react-router-dom";
+import { Container, Row } from "bootstrap-4-react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import "../styles/Signup.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../styles/Admin.css";
 
 const Signup = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
     password: "",
+    address: "",
+    phoneNumber: "",
   });
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -20,21 +26,39 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setMessage(""); // Reset message
+
+    try {
+      const response = await axios.post("http://localhost:8000/buyer/signup", formData);
+      console.log(response.data); // Log the response for debugging
+      setMessage("Signup successful! Redirecting...");
+      
+      setTimeout(() => {
+        navigate("/login"); // Redirect to Buyer Dashboard
+      }, 1000);
+    } catch (error) {
+      alert(error.response?.data?.message || "Signup failed. Please try again.");
+    }
+  };
+
   return (
-    <div className="signup-main">
+    <div className="admin-page">
       <Container>
         <Row>
           <div className="form-wrapper">
-              <h2 className="signup-title">Sign Up</h2>
-
+            <div className="admin-heading">Buyer Sign Up</div>
+            <form onSubmit={handleSignup}>
               <div className="input-wrapper">
                 <input
                   type="text"
                   name="name"
-                  placeholder="Full Name"
+                  placeholder="Name"
                   value={formData.name}
                   onChange={handleChange}
                   className="custom-input"
+                  required
                 />
               </div>
 
@@ -46,17 +70,7 @@ const Signup = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="custom-input"
-                />
-              </div>
-
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  name="phone"
-                  placeholder="Phone Number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="custom-input"
+                  required
                 />
               </div>
 
@@ -68,19 +82,45 @@ const Signup = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="custom-input"
+                  required
                 />
                 <span className="password-toggle" onClick={togglePasswordVisibility}>
                   {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                 </span>
               </div>
 
-              <div className="button-wrapper">
-                <button className="custom-button">Sign Up</button>
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  name="address"
+                  placeholder="Address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="custom-input"
+                  required
+                />
               </div>
 
-              <div className="signin-text">
-                Already have an account? <a href="/login" className="signin-link">Sign In</a>
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  placeholder="Phone Number"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  className="custom-input"
+                  required
+                />
               </div>
+
+              <div className="button-wrapper">
+                <button type="submit" className="custom-button">Sign Up</button>
+              </div>
+            </form>
+            <div className="signup-text">
+                Already have an account? <Link to="/login" className="signup-link">Sign In</Link>
+              </div>
+            {message && <p className="login-message">{message}</p>}
           </div>
         </Row>
       </Container>

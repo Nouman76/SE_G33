@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "bootstrap-4-react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios"; // ✅ added to handle API calls
 import "../styles/ShopCategory.css";
 import img from "../assets/product.png";
 
@@ -11,6 +13,26 @@ const categories = [
 ];
 
 const ShopCategory = () => {
+  const navigate = useNavigate();
+  const [categoryProducts, setCategoryProducts] = useState({});
+
+  useEffect(() => {
+    // Fetch products for each category from backend
+    categories.forEach(async (cat) => {
+      try {
+        const response = await axios.get(`http://localhost:8000/products?search=${encodeURIComponent(cat.category)}`);
+        // Store the fetched products for each category
+        setCategoryProducts(prev => ({
+          ...prev,
+          [cat.category]: response.data.slice(0, 3), // Fetch top 3 products
+        }));
+      } catch (error) {
+        console.error(`Error fetching products for ${cat.category}:`, error);
+        setCategoryProducts(prev => ({ ...prev, [cat.category]: [] }));
+      }
+    });
+  }, []);
+
   return (
     <div className="shop-category">
       <Container>
@@ -22,7 +44,13 @@ const ShopCategory = () => {
                 <div className="category-title-text">{cat.title}</div>
               </Col>
               <Col md={6} className="view-all-container">
-                <div className="view-all-btn">View All ➝</div>
+                <div
+                  className="view-all-btn"
+                  onClick={() => navigate(`/shoppage/${cat.category}`)} // Navigate to category-specific page
+                  style={{ cursor: 'pointer' }}
+                >
+                  View All ➝
+                </div>
               </Col>
             </Row>
 
@@ -30,7 +58,8 @@ const ShopCategory = () => {
             <Container>
               <div className="display-products">
                 <Row>
-                  {[1, 2, 3].map((_, index) => (
+                  {/* Display up to 3 products for each category */}
+                  {(categoryProducts[cat.category] || []).map((product, index) => (
                     <Col md={4} key={index}>
                       <Row className="product-row">
                         {/* Image on Left */}
@@ -43,10 +72,11 @@ const ShopCategory = () => {
                         <Col md={7}>
                           <div className="product-details">
                             <div className="product-category">{cat.category}</div>
-                            <div className="product-name">Sample {cat.category} {index + 1}</div>
+                            <div className="product-name">{product.name}</div>
+                            <div className="product-price">Rs. {product.price}</div>
                             <div
                               className="shop-now"
-                              onClick={() => window.location.href = "/product-detail"}
+                              onClick={() => window.location.href = `/product-detail/${product._id}`}
                             >
                               Shop Now ➝
                             </div>

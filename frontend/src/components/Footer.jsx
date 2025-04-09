@@ -36,7 +36,8 @@ const Footer = () => {
             <ul className="footer-links">
               <li><a href="/shop">Shop</a></li>
               <li><a href="/service-device">Nearby Hospitals</a></li>
-              <li><a href="/training">Track Order</a></li>
+              <li><a href="https://www.tcsexpress.com/track/" target="_blank" rel="noopener noreferrer">Track Order</a></li>
+
               <li><a href="/business">Order History</a></li>
               <li><a href="/business">Register Store</a></li>
             </ul>

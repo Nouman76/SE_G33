@@ -15,10 +15,10 @@ const TopBar = () => {
             </Col>
 
             <Col md={6} className="text-center">
-              <marquee direction="right">
-                30% OFF ALL ELECTRONIC PRODUCTS! SPECIAL THIS MONTH. CODE:{" "}
-                <span className="font-weight-bold">JKR123</span>
-              </marquee>
+              <div>
+                30% OFF ON LIMITED PRODUCTS! SPECIAL THIS MONTH. CODE:{" "}
+                <span className="font-weight-bold">G33</span>
+              </div>
             </Col>
 
             <Col md={3} className="d-flex justify-content-end">

@@ -17,29 +17,56 @@ export const createProduct = async (req, res) => {
     res.status(500).json({ message: "Error adding product!", error: error.message });
   }
 };
+// Get Products by Category (limit 3)
+// In your controller (product.js)
+export const getProductsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const products = await Product.find({ category })
+      .limit(3)
+      .select("name price");
+
+    if (!products.length) {
+      return res.status(404).json({ message: "No products found for this category." });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching products by category", error: error.message });
+  }
+};
+
+
 
 // View All Products
 // View All Products OR Search by Name/Category
 export const getProducts = async (req, res) => {
   try {
-    const { search } = req.query;
+    const { search, sellerId } = req.query;
     let query = {};
-
-    if (search) {
-      query = {
-        $or: [
-          { name: { $regex: search, $options: "i" } }, // Case-insensitive search by name
-          { category: { $regex: search, $options: "i" } }, // Case-insensitive search by category
-        ],
-      };
+    
+    // If sellerId is provided, filter by seller
+    if (sellerId) {
+      query.seller = sellerId;
     }
 
-    const products = await Product.find(query); // Fetch products based on search
+    // If search is provided, add case-insensitive name/category filter
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const products = await Product.find(query);
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: "Error fetching products!", error: error.message });
   }
 };
+
+
+
 
 
 // Get a Single Product by ID

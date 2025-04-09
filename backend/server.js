@@ -8,9 +8,7 @@ import bcrypt from "bcrypt";
 import Seller from "./models/seller.js";
 import sellerRoutes from "./routes/seller.js";
 import productRoutes from "./routes/product.js"; // Import the product routes
-
-// API Routes
-
+import BuyerRoutes from './routes/buyer.js';
 
 dotenv.config();
 
@@ -28,39 +26,60 @@ mongoose.connect(uri)
   .then(() => console.log("Connected to MongoDB"))
   .catch(err => console.error("Error connecting to MongoDB:", err));
 
-// Create Default Admin
-const createAdmin = async () => {
+// Create Default Admins
+const createAdmins = async () => {
   try {
-    const existingAdmin = await Seller.findOne({ email: "admin@example.com" });
-    if (!existingAdmin) {
-      const hashedPassword = await bcrypt.hash("admin123", 10);
-      const admin = new Seller({
+    // First Admin
+    const existingAdmin1 = await Seller.findOne({ email: "admin@example.com" });
+    if (!existingAdmin1) {
+      const hashedPassword1 = await bcrypt.hash("admin123", 10);
+      const admin1 = new Seller({
         name: "Admin",
         email: "admin@example.com",
-        password: hashedPassword,
+        password: hashedPassword1,
         storeName: "AdminStore",
         businessAddress: "Admin HQ",
         phoneNumber: "1234567890",
       });
-      await admin.save();
+      await admin1.save();
       console.log("Default admin created!");
     } else {
       console.log("Admin already exists.");
     }
+
+    // Second Admin
+    const existingAdmin2 = await Seller.findOne({ email: "admin2@example.com" });
+    if (!existingAdmin2) {
+      const hashedPassword2 = await bcrypt.hash("admin456", 10);
+      const admin2 = new Seller({
+        name: "AdminTwo",
+        email: "admin2@example.com",
+        password: hashedPassword2,
+        storeName: "SecondAdminStore",
+        businessAddress: "Admin Branch",
+        phoneNumber: "0987654321",
+      });
+      await admin2.save();
+      console.log("Second admin created!");
+    } else {
+      console.log("Second admin already exists.");
+    }
+
   } catch (error) {
-    console.error("Error creating admin:", error.message);
+    console.error("Error creating admins:", error.message);
   }
 };
 
-// Ensure admin is created after MongoDB connects
+// Ensure admins are created after MongoDB connects
 mongoose.connection.once("open", async () => {
-  await createAdmin();
+  await createAdmins();
 });
 
 // API Routes
 app.use("/seller", sellerRoutes);
 app.use("/products", productRoutes); // Add this line
-app.use("/seller", sellerRoutes);
+
+app.use('/buyer', BuyerRoutes);
 
 // Socket.io Setup
 const io = new Server(server, {

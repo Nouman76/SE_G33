@@ -14,6 +14,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleRedirect = (category) => {
+    console.log(`Redirecting to category: ${category}`);
     navigate(`/shop-category/${encodeURIComponent(category)}`);
   };
 
@@ -38,7 +39,7 @@ const Home = () => {
               { icon: smartphoneIcon, label: 'Dog Food' },
               { icon: laptopIcon, label: 'Cat Accessories' },
               { icon: tvIcon, label: 'Dog Accessories' },
-              { icon: cameraIcon, label: 'Pets Medicine' },
+              { icon: cameraIcon, label: 'Pet Medicine' },
             ].map((item, index) => (
               <Col
                 key={index}

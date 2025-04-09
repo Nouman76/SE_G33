@@ -11,37 +11,39 @@ const SearchBar = () => {
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/products"); // Fetch all products once
+        const response = await fetch("http://localhost:8000/products");
         const data = await response.json();
-        setAllProducts(data);
+        console.log("Fetched product data:", data); // Debugging line
+
+        // Use data.products if response is an object containing the array
+        setAllProducts(Array.isArray(data) ? data : data.products || []);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
 
     fetchAllProducts();
-  }, []); // Fetch products only once on mount
+  }, []);
 
   useEffect(() => {
     if (!query.trim()) {
-      setResults([]); // Clear results if input is empty
+      setResults([]);
       return;
     }
 
-    // **Filter products that match the query (case-insensitive)**
     const filteredResults = allProducts.filter((product) =>
       product.name.toLowerCase().includes(query.toLowerCase())
     );
 
     setResults(filteredResults);
-  }, [query, allProducts]); // Re-filter when query changes
+  }, [query, allProducts]);
 
   return (
     <div className="header">
       <Container>
         <Row className="header-row">
           <Col md={2} className="logo-container">
-            <span className="top-logo">PET STORE</span>
+            <span className="top-logo">PAW PAL</span>
           </Col>
           <Col md={8} className="search-bar-container">
             <input
@@ -59,7 +61,6 @@ const SearchBar = () => {
           </Col>
         </Row>
 
-        {/* 🔍 Live Search Results Popup */}
         {results.length > 0 && (
           <div className="search-results">
             {results.map((product) => (

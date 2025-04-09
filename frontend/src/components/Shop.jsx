@@ -378,7 +378,14 @@ const Shop = () => {
                 <div className="item-label">Address:</div>
                 <div className="item-value">{customerDetails.address}, {customerDetails.city}</div>
               </div>
-              <div className="track-order-btn">Track Your Order</div>
+              <a
+  href="https://www.tcsexpress.com/track/"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <div className="track-order-btn">Track Your Order</div>
+</a>
+
             </div>
           </div>
         )}

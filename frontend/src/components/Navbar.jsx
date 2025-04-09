@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "bootstrap-4-react";
 import { useLocation } from "react-router-dom";
-import Menu from "../assets/menu.svg";
 import FavouritesIcon from "../assets/heart.svg";
 import CartIcon from "../assets/bag.svg";
 import ProfileIcon from "../assets/profile.svg";
@@ -11,6 +10,7 @@ const Navbar = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const [activePath, setActivePath] = useState("");
   const location = useLocation();
+  const isLoggedIn = localStorage.getItem("token"); // Check if the user is logged in
 
   useEffect(() => {
     setActivePath(location.pathname);
@@ -20,13 +20,18 @@ const Navbar = () => {
     setIsNavCollapsed(!isNavCollapsed);
   };
 
+  // Logout function that clears local storage and redirects to the home page
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Clear the token from local storage
+    window.location.href = "/"; // Redirect to home page
+  };
+
   return (
     <div className="custom-navbar">
       <Container>
         <Row>
           <Col md={2} className="all-category-btn">
-            <img src={Menu} alt="Menu Icon" className="menu-icon me-2" />
-            <span>All Category</span>
+            <span>Nearby Pet Hospitals</span>
           </Col>
 
           <Col md={8} className="navu">
@@ -50,7 +55,7 @@ const Navbar = () => {
               <li>
                 <button
                   className={activePath === "/shop" ? "active-btn" : ""}
-                  onClick={() => (window.location.href = "#shop")}
+                  onClick={() => (window.location.href = "./shoppage")}
                 >
                   Shop
                 </button>
@@ -83,12 +88,28 @@ const Navbar = () => {
                 className="clickable-icon"
                 onClick={() => (window.location.href = "/shop")}
               />
-              <img
-                src={ProfileIcon}
-                alt="Profile"
-                className="clickable-icon"
-                onClick={() => (window.location.href = "/signup")}
-              />
+              {/* Conditionally render the Profile icon */}
+              {isLoggedIn ? (
+                <>
+                  <img
+                    src={ProfileIcon}
+                    alt="Profile"
+                    className="clickable-icon"
+                    onClick={() => (window.location.href = "/profile")} // Navigate to profile
+                  />
+                  {/* Logout button */}
+                  <button className="logout-btn" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <img
+                  src={ProfileIcon}
+                  alt="Profile"
+                  className="clickable-icon"
+                  onClick={() => (window.location.href = "/signup")} // Redirect to signup
+                />
+              )}
             </div>
           </Col>
 

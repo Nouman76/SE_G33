@@ -13,6 +13,10 @@ import AdminDashboard from "./components/Admindashboard";
 import AddProduct from "./components/Addproduct";
 import DeleteProduct from "./components/Deleteproduct";
 import ViewProducts from "./components/Viewproduct";
+import SellerSignup from "./components/SellerSignup";
+import ShopPage from "./components/ShopPage";
+import Profile from "./components/Profile";
+
 import "./App.css";
 
 function AppContent() {
@@ -26,14 +30,18 @@ function AppContent() {
       {!isAdminPage && <Header />}
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/shopcategory" element={<ShopCategory />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/shoppage" element={<ShopPage />} />
+        <Route path="/shop-category/:categoryName" element={<ShopPage />} />
         
         {/* Admin-related routes without Header/Footer */}
         <Route path="/admin" element={<Admin />} />
+        <Route path="/adminsignup" element={<SellerSignup />} />
         <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/admin/add-product" element={<AddProduct />} />
         <Route path="/admin/delete-product" element={<DeleteProduct />} />
