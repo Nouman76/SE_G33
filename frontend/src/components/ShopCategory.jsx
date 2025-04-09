@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "bootstrap-4-react";
 import "../styles/ShopCategory.css";
-import img from "../assets/home1.png";
+import img from "../assets/product.png";
 
 const categories = [
   { title: "Best Selling - Cat Food", category: "Cat Food" },

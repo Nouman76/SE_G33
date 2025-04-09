@@ -301,6 +301,21 @@ const Shop = () => {
                     <div className="summary-title">Total:</div>
                     <span className="summary-value">${(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
                   </div>
+                  <div className="payment-method">
+  <div className="payment-title">Select Payment Method</div>
+  <div className="payment-option">
+    <input
+      type="radio"
+      id="cod"
+      name="paymentMethod"
+      value="Cash on Delivery"
+      checked={true} // Default selection
+      readOnly
+    />
+    <label htmlFor="cod">Cash on Delivery</label>
+  </div>
+</div>
+
                   <div className="checkout-btn" onClick={() => setStep(3)}>Place Order</div>
                 </div>
            </Col>

@@ -165,13 +165,6 @@
     margin-bottom: 5px;
 }
 
-.product-img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 5px;
-}
-
 /* Checkout Form */
 /* Billing Details Section */
 .billing-title
@@ -394,3 +387,32 @@
     font-weight: 700;
     color: #001c30;
 }
+.payment-method {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+  }
+  
+  .payment-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .payment-title
+  {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .payment-option input[type="radio"] {
+    transform: scale(0.8); /* Adjust the scale to make it smaller */
+    margin-right: 130px; /* Add space between radio and label */
+  }
+  .small-radio {
+    width: 14px;
+    height: 14px;
+  }
+  .payment-option label {
+    white-space: nowrap;
+  }
+  
