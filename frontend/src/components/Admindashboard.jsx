@@ -1,18 +1,31 @@
-// import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import AddProduct from "./Addproduct";
+import ViewProducts from "./Viewproduct";
 import "../styles/Admindashboard.css";
 
 const AdminDashboard = () => {
+  const [selectedPage, setSelectedPage] = useState(null);
+
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">Admin Dashboard</h1>
       <nav className="dashboard-nav">
+        <div className="admin-title">Admin Panel</div>
+        <div className="title-border"></div> {/* Border under heading */}
         <ul>
-          <li><Link to="/admin/add-product">Add Product</Link></li>
-          {/* <li><Link to="/admin/delete-product">Delete Product</Link></li> */}
-          <li><Link to="/admin/view-products">View My Products</Link></li>
+          <li onClick={() => setSelectedPage("add-product")}>
+            Add Product
+          </li>
+          <li onClick={() => setSelectedPage("view-products")}>
+            View My Products
+          </li>
         </ul>
       </nav>
+
+      {/* Dynamic Content Area */}
+      <div className="dynamic-content">
+        {selectedPage === "add-product" && <AddProduct />}
+        {selectedPage === "view-products" && <ViewProducts />}
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 .add-product-container {
-    max-width: 400px;
+    max-width: 700px;
     margin: auto;
     padding: 20px;
     background: white;
@@ -7,23 +7,49 @@
     border-radius: 8px;
 }
 
-.add-product-form input,
-.add-product-form textarea,
-.add-product-form button {
+/* Title Styling */
+.title {
+    color:#001c30;
+    font-family: "Roboto", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+/* Labels */
+.product-label, .description-label {
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #001c30;
+}
+
+/* Input Fields & Select */
+input, textarea, select {
     width: 100%;
-    margin: 10px 0;
     padding: 10px;
+    margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-.add-product-form button {
-    background-color: #28a745;
-    color: white;
-    border: none;
+/* Add Product Button */
+.add-product-btn {
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 55px;
+    background-color: #f4ce14;
     cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-.add-product-form button:hover {
-    background-color: #218838;
+.add-product-btn:hover {
+    background-color: #e6bd00;
 }

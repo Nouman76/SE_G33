@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Container, Row } from "bootstrap-4-react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
@@ -29,6 +30,7 @@ const Admin = () => {
     try {
       const response = await axios.post("http://localhost:8000/seller/login", formData);
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("seller", JSON.stringify(response.data.seller));
       setMessage("Login successful! Redirecting...");
       
       setTimeout(() => {
@@ -44,7 +46,7 @@ const Admin = () => {
       <Container>
         <Row>
           <div className="form-wrapper">
-            <h2 className="admin-title">Admin Sign In</h2>
+            <div className="admin-heading">Seller Sign In</div>
             <form onSubmit={handleLogin}>
               <div className="input-wrapper">
                 <input
@@ -77,6 +79,9 @@ const Admin = () => {
                 <button type="submit" className="custom-button">Sign In</button>
               </div>
             </form>
+            <div className="signup-text">
+                Want to Register your Store on our Platform? <Link to="/adminsignup" className="signup-link">Sign Up</Link>
+              </div>
             {message && <p className="login-message">{message}</p>}
           </div>
         </Row>
