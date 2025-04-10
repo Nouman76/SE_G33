@@ -46,7 +46,7 @@ const ShopCategory = () => {
               <Col md={6} className="view-all-container">
                 <div
                   className="view-all-btn"
-                  onClick={() => navigate(`/shoppage/${cat.category}`)} // Navigate to category-specific page
+                  onClick={() => navigate(`/shoppage`)} // Navigate to shop page without category filter
                   style={{ cursor: 'pointer' }}
                 >
                   View All ➝

@@ -1,0 +1,126 @@
+/* Main section styling */
+.shop-page {
+    background-color: #f8f9fa;
+    padding: 30px 0;
+  }
+  
+  /* Category Title */
+  .category-title {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: #001c30;
+  }
+  
+  /* View All Button */
+  .view-all{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .view-all-btn {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #001c30;
+    cursor: pointer;
+  }
+  
+  /* Product List Section */
+  .product-list {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Product Column */
+  .product-list .col-md-4 {
+    flex: 0 1 32%;
+    max-width: 32%;
+    margin-bottom: 30px;
+  }
+  
+  /* Product Card */
+  .product-card {
+    background-color: #fff;
+    padding: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 320px;
+  }
+  
+  /* Product Image Column */
+  .product-image-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .product-img-cont {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .product-img {
+    width: 100%;
+    border-radius: 5px;
+    height: 110px;
+    object-fit: cover;
+  }
+  
+  /* Product Description Column */
+  .product-description-col {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  /* Product Category */
+  .product-category {
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #8e96a4;
+  }
+  
+  /* Product Name */
+  .product-name {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #001c30;
+  }
+  
+  /* Product Price Column */
+  .product-price-col {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #ee9322;
+  }
+  
+  /* Buy Button Column */
+  .product-buy-btn-col {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .buy-btn {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #f8f9fa;
+    cursor: pointer;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #001c30;
+    border-radius: 20px;
+    width: 110px;
+    text-align: center;
+  }
+  

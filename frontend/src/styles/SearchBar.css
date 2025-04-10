@@ -3,6 +3,7 @@
   background-color: #ffffff;
   padding: 10px 15px;
   border-bottom: 1px solid #878787;
+  position: relative; /* To position the search results absolutely */
 }
 
 /* Row alignment */
@@ -70,19 +71,29 @@
   margin-right: 8px;
 }
 
-.search-results
-{
+/* Search Results (Dropdown effect) */
+.search-results {
+  position: absolute; /* Position the results on top of content */
+  top: 100%; /* Position right below the search bar */
+  left: 0;
+  right: 0;
   border: 1px solid #ccc;
-  overflow: scroll;
   max-height: 140px;
-  margin: 2px 195px;
+  overflow-y: auto; /* Allows scrolling if results are too long */
   border-radius: 15px;
   background-color: #f5f7f8;
+  z-index: 10; /* Ensure it's on top of other elements */
+  margin: 2px 395px;
 }
 
-.search-result-item
-{
-  padding: 5px 20px;
+/* Search Result Item */
+.search-result-item {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.search-result-item:hover {
+  background-color: #eaeaea;
 }
 
 /* Responsive */

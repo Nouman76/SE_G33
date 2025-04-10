@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { Container, Row, Col } from "bootstrap-4-react";
 import axios from "axios";
-// import "../styles/ShopPage.css";
+import "../styles/ShopPage.css"; // Reuse styles from ShopCategory.css
+import img from "../assets/product.png"; // Default product image
 
 const ShopPage = () => {
-  const { categoryName } = useParams();  // Get the category from the URL if it exists
+  const { categoryName } = useParams(); // Get the category from the URL if it exists
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("Fetching products for:", categoryName || "All Products");
@@ -30,21 +33,80 @@ const ShopPage = () => {
 
   return (
     <div className="shop-page">
-      <h2>Showing Products {categoryName ? `for: ${categoryName}` : " - All"}</h2>
-      <div className="product-grid">
-        {products.length > 0 ? (
-          products.map((product) => (
-            <div key={product._id} className="product-card">
-              <h3>{product.name}</h3>
-              <p>{product.description}</p>
-              <p><strong>${product.price}</strong></p>
-              <p><em>{product.category}</em></p>
+      <Container>
+        <Row>
+          <Col md={6} className="category-header">
+            <div className="category-title">
+              Showing Products {categoryName ? `for: ${categoryName}` : " - All"}
             </div>
-          ))
-        ) : (
-          <p>No products found{categoryName ? " in this category" : ""}.</p>
-        )}
-      </div>
+          </Col>
+          <Col md={6} className="view-all">
+            <div
+              className="view-all-btn"
+              onClick={() => navigate(`/shoppage`)} // Navigate to shop page without category filter
+              style={{ cursor: "pointer" }}
+            >
+              View All
+            </div>
+          </Col>
+        </Row>
+
+        <Row className="product-list">
+          {/* Display products in a similar layout */}
+          {products.length > 0 ? (
+            products.map((product, index) => (
+              <Col md={4} key={index}>
+                <Row className="product-card">
+                  {/* Product Image */}
+                  <Col md={5} className="product-image-col">
+                    <div className="product-img-cont">
+                      <img src={img} alt={`${product.name} Image`} className="product-img" />
+                    </div>
+                  </Col>
+
+                  {/* Product Description */}
+                  <Col md={7} className="product-description-col">
+                    <div className="product-description">
+                      {/* Product Category */}
+                      <Row>
+                        <Col md={12}>
+                          <div className="product-category">{product.category}</div>
+                        </Col>
+                      </Row>
+
+                      {/* Product Name */}
+                      <Row>
+                        <Col md={12}>
+                          <div className="product-name">{product.name}</div>
+                        </Col>
+                      </Row>
+
+                      {/* Price and Buy Button */}
+                      <Row>
+                        <Col md={6} className="product-price-col">
+                          <div className="product-price">Rs. {product.price}</div>
+                        </Col>
+                        <Col md={6} className="product-buy-btn-col">
+                          <div
+                            className="buy-btn"
+                            onClick={() => window.location.href = `/product-detail/${product._id}`}
+                          >
+                            Buy
+                          </div>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+            ))
+          ) : (
+            <Col md={12}>
+              <p>No products found {categoryName ? `for ${categoryName}` : ""}.</p>
+            </Col>
+          )}
+        </Row>
+      </Container>
     </div>
   );
 };

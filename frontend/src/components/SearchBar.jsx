@@ -61,6 +61,7 @@ const SearchBar = () => {
           </Col>
         </Row>
 
+        {/* Only show search results when there are results */}
         {results.length > 0 && (
           <div className="search-results">
             {results.map((product) => (

@@ -49,7 +49,7 @@ const Home = () => {
                 style={{ cursor: "pointer" }}
               >
                 <img src={item.icon} alt={item.label} className="category-icon" />
-                <p className="category-text">{item.label}</p>
+                <div className="category-text">{item.label}</div>
               </Col>
             ))}
           </Row>

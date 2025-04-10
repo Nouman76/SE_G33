@@ -43,7 +43,7 @@ const NearestPetCare = () => {
 
   return (
     <div className="nearest-pet-care-container">
-      <h2>Find Nearest Pet Care Locations</h2>
+      <div className='pet-care-heading'>Find Nearest Pet Care Locations</div>
 
       {location ? (
         <MapContainer

@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "bootstrap-4-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate} from "react-router-dom";
 import FavouritesIcon from "../assets/heart.svg";
 import CartIcon from "../assets/bag.svg";
 import ProfileIcon from "../assets/profile.svg";
 import "../styles/Navbar.css";
 import { Link } from 'react-router-dom';
 
-
 const Navbar = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const [activePath, setActivePath] = useState("");
   const location = useLocation();
-  const isLoggedIn = localStorage.getItem("token"); // Check if the user is logged in
+  const isLoggedIn = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setActivePath(location.pathname);
@@ -22,24 +22,22 @@ const Navbar = () => {
     setIsNavCollapsed(!isNavCollapsed);
   };
 
-  // Logout function that clears local storage and redirects to the home page
+  // Save this logic for the profile page
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Clear the token from local storage
-    window.location.href = "/"; // Redirect to home page
+    localStorage.removeItem("token");
+    window.location.href = "/";
   };
 
   return (
     <div className="custom-navbar">
       <Container>
         <Row>
-        
 
-<Col md={2} className="all-category-btn">
-  <Link to="/nearestpetcare">
-    <span>Nearby Pet Hospitals</span>
-  </Link>
-</Col>
-
+          <Col md={2} className="all-category-btn">
+              <span
+               onClick={() => navigate(`/nearestpetcare`)}
+               style={{ cursor: "pointer" }}>Nearby Pet Hospitals</span>
+          </Col>
 
           <Col md={8} className="navu">
             <ul className="nav-links list-unstyled">
@@ -95,28 +93,12 @@ const Navbar = () => {
                 className="clickable-icon"
                 onClick={() => (window.location.href = "/shop")}
               />
-              {/* Conditionally render the Profile icon */}
-              {isLoggedIn ? (
-                <>
-                  <img
-                    src={ProfileIcon}
-                    alt="Profile"
-                    className="clickable-icon"
-                    onClick={() => (window.location.href = "/profile")} // Navigate to profile
-                  />
-                  {/* Logout button */}
-                  <button className="logout-btn" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <img
-                  src={ProfileIcon}
-                  alt="Profile"
-                  className="clickable-icon"
-                  onClick={() => (window.location.href = "/signup")} // Redirect to signup
-                />
-              )}
+              <img
+                src={ProfileIcon}
+                alt="Profile"
+                className="clickable-icon"
+                onClick={() => (window.location.href = isLoggedIn ? "/profile" : "/signup")}
+              />
             </div>
           </Col>
 
