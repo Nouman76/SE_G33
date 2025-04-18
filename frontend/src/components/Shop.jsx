@@ -1,21 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "bootstrap-4-react";
-import emailjs from "emailjs-com"; // Import EmailJS
+import emailjs from "emailjs-com";
 import "../styles/Shop.css";
 import successIcon from "../assets/Group.svg";
 import trashIcon from "../assets/trash.svg";
+import { useCart } from "./CartContext";
 
 const Shop = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Azus Zens 123 Metallic Color i5 Ryzen Generation 10 16” FHD Laptop",
-      price: 100.0,
-      qty: 1,
-    },
-  ]);
-
+  const { cartItems, removeFromCart } = useCart();
   const [step, setStep] = useState(1);
+  const [isMounted, setIsMounted] = useState(false);
   const [customerDetails, setCustomerDetails] = useState({
     firstName: "",
     lastName: "",
@@ -25,16 +19,26 @@ const Shop = () => {
     phone: "",
     email: "",
   });
-
-  const [orderDetails, setOrderDetails] = useState(null);
+  const [ setOrderDetails] = useState(null);
   const deliveryCharge = 10.0;
 
+  // Debug cart items
+  useEffect(() => {
+    setIsMounted(true);
+    console.log("Cart items from context:", cartItems);
+    console.log("Cart items from localStorage:", JSON.parse(localStorage.getItem("cart")));
+    return () => setIsMounted(false);
+  }, [cartItems]);
+
+  if (!isMounted) {
+    return <div>Loading cart...</div>;
+  }
   const calculateTotalPrice = (items) => {
     return items.reduce((acc, item) => acc + item.price * item.qty, 0);
   };
 
   const handleRemove = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    removeFromCart(id);
   };
 
   const handleSubmit = (e) => {
@@ -102,38 +106,30 @@ const Shop = () => {
 
         {/* 🛒 Shopping Cart Section */}
         {step === 1 && (
-            <div className="cart-step">
+          <div className="cart-step">
             <Row>
               <Col md={8}>
                 <div className="products-in-cart">
                   {/* Cart Header */}
                   <Row className="cart-header">
-                    <Col md={6} className="cart-header-item">Product Details</Col>
-                    <Col md={2} className="cart-header-item">Price</Col>
-                    <Col md={1} className="cart-header-item">QTY</Col>
-                    <Col md={2} className="cart-header-item">Subtotal</Col>
-                    <Col md={1} className="cart-header-item text-center"></Col>
+                    <Col md={6}>Product Details</Col>
+                    <Col md={2}>Price</Col>
+                    <Col md={1}>QTY</Col>
+                    <Col md={2}>Subtotal</Col>
+                    <Col md={1} className="text-center"></Col>
                   </Row>
 
                   {/* Cart Items */}
                   {cartItems.map((item) => (
-                    <Row key={item.id} className="cart-item">
-                      {/* Product Details */}
+                    <Row key={item.id || item._id} className="cart-item">
                       <Col md={6} className="cart-item-details">
                         <div className="cart-item-name">{item.name}</div>
                       </Col>
-
-                      {/* Price */}
-                      <Col md={2} className="cart-item-price">${item.price.toFixed(2)}</Col>
-
-                      {/* Quantity */}
-                      <Col md={1} className="cart-item-qty">{item.qty}</Col>
-
-                      {/* Subtotal */}
-                      <Col md={2} className="cart-item-subtotal">${(item.price * item.qty).toFixed(2)}</Col>
-
-                      {/* Remove Button */}
-                      <Col md={1} className="cart-item-remove text-center" onClick={() => handleRemove(item.id)}>
+                      <Col md={2}>${item.price.toFixed(2)}</Col>
+                      <Col md={1}>{item.qty}</Col>
+                      <Col md={2}>${(item.price * item.qty).toFixed(2)}</Col>
+                      <Col md={1} className="text-center" 
+                        onClick={() => handleRemove(item.id || item._id)}>
                         <img src={trashIcon} alt="Remove" className="trash-icon" />
                       </Col>
                     </Row>

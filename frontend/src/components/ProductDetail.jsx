@@ -1,19 +1,34 @@
-// src/pages/ProductDetail.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/ProductDetail.css";
-import img from "../assets/product.png"; // fallback image if needed
+import img from "../assets/product.png";
+import { useCart } from "../components/CartContext";
 
 const ProductDetail = () => {
-  const { id } = useParams(); // get product ID from URL
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
-
+  const { addToCart } = useCart();
+  
   useEffect(() => {
     axios.get(`http://localhost:8000/products/${id}`)
-      .then(res => setProduct(res.data))
+      .then(res => {
+        const productData = res.data;
+        console.log("Fetched product:", productData); // Debug
+        setProduct(productData);
+      })
       .catch(err => console.error("Error fetching product:", err));
   }, [id]);
+
+  const handleAddToCart = () => {
+    if (product) {
+      console.log("Adding to cart:", {
+        ...product,
+        id: product._id // Ensure ID is properly set
+      });
+      addToCart(product);
+    }
+  };
 
   if (!product) return <div>Loading...</div>;
 
@@ -28,7 +43,7 @@ const ProductDetail = () => {
           <p><strong>Category:</strong> {product.category}</p>
           <p><strong>Description:</strong> {product.description}</p>
           <p><strong>Price:</strong> Rs. {product.price}</p>
-          <button className="add-to-cart-btn">Add to Cart</button>
+          <button onClick={handleAddToCart}>Add to Cart</button>
         </div>
       </div>
     </div>

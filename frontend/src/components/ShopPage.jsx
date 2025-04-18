@@ -87,12 +87,12 @@ const ShopPage = () => {
                           <div className="product-price">Rs. {product.price}</div>
                         </Col>
                         <Col md={6} className="product-buy-btn-col">
-                          <div
-                            className="buy-btn"
-                            onClick={() => window.location.href = `/product-detail/${product._id}`}
-                          >
-                            Buy
-                          </div>
+                        <div
+  className="buy-btn"
+  onClick={() => navigate(`/product/${product._id}`)} // Corrected path
+>
+  Buy
+</div>
                         </Col>
                       </Row>
                     </div>

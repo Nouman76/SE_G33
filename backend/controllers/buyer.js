@@ -2,6 +2,33 @@ import Buyer from "../models/buyer.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+
+
+export const updateBuyerProfile = async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, "yourSecretKey");
+    const buyer = await Buyer.findById(decoded.id);
+    if (!buyer) return res.status(404).json({ message: "Buyer not found" });
+
+    const { name, email, phoneNumber, address } = req.body;
+
+    buyer.name = name;
+    buyer.email = email;
+    buyer.phoneNumber = phoneNumber;
+    buyer.address = address;
+
+    await buyer.save();
+
+    res.status(200).json({ success: true, message: "Profile updated successfully" });
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(400).json({ success: false, message: "Profile update failed", error: err.message });
+  }
+};
+
 // Register a new buyer
 export const registerBuyer = async (req, res) => {
   const { name, email, password, address, phoneNumber } = req.body;

@@ -76,7 +76,7 @@ const ShopCategory = () => {
                             <div className="product-price">Rs. {product.price}</div>
                             <div
                               className="shop-now"
-                              onClick={() => window.location.href = `/product-detail/${product._id}`}
+                              onClick={() => navigate(`/product/${product._id}`)} 
                             >
                               Shop Now ➝
                             </div>
