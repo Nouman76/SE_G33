@@ -89,6 +89,7 @@ export const changePassword = async (req, res) => {
   
     try {
       const decodedToken = jwt.verify(token, 'yourSecretKey');
+      console.log("Decoded token:", decodedToken);
       const buyer = await Buyer.findById(decodedToken.id);
       
       if (!buyer) {

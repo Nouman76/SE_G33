@@ -17,6 +17,7 @@ import SellerSignup from "./components/SellerSignup";
 import ShopPage from "./components/ShopPage";
 import Profile from "./components/Profile";
 import NearestPetCare from './components/NearestPetCare';
+import ProductDetail from "./components/ProductDetail";
 
 import "./App.css";
 
@@ -40,7 +41,7 @@ function AppContent() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/shoppage" element={<ShopPage />} />
         <Route path="/shop-category/:categoryName" element={<ShopPage />} />
-        
+        <Route path="/product-detail/:id" element={<ProductDetail />} />
         {/* Admin-related routes without Header/Footer */}
         <Route path="/admin" element={<Admin />} />
         <Route path="/adminsignup" element={<SellerSignup />} />
