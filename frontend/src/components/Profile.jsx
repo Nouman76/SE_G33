@@ -26,25 +26,31 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      console.log("fetchUserData called");
       try {
         const token = localStorage.getItem("token");
+        console.log("Profile token:", token);
+        
         const response = await axios.get("http://localhost:8000/buyer/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+        
+        console.log("Profile API response:", response.data);
         setUser(response.data);
         setFormValues(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
+        console.error("Error response:", error.response?.data);
       }
     };
-
+  
     fetchUserData();
   }, []);
-
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.setItem("isLoggedIn", "false");
     navigate("/login");
   };
 
@@ -198,21 +204,28 @@ const Profile = () => {
             <div className="success-message mt-2">Profile updated successfully!</div>
           )}
 
-          <Row className="mt-4">
-            <Col>
-              <div className="contact-subtitle">Orders</div>
-              <div className="yellow-underline"></div>
-              {user.orders && user.orders.length > 0 ? (
-                user.orders.map((order, index) => (
-                  <div key={index}>
-                    <strong>Order #{order.id}</strong> - {order.date}
-                  </div>
-                ))
-              ) : (
-                <div>No orders yet</div>
-              )}
-            </Col>
-          </Row>
+// In your Profile.jsx component, update the orders section:
+<Row className="mt-4">
+  <Col>
+    <div className="contact-subtitle">My Orders</div>
+    <div className="yellow-underline"></div>
+    {user.orders && user.orders.length > 0 ? (
+      <div className="orders-list">
+        {user.orders.map((order, index) => (
+          <div key={index} className="order-item">
+            <div><strong>Product:</strong> {order.name}</div>
+            <div><strong>Price:</strong> ${order.price.toFixed(2)}</div>
+            <div><strong>Quantity:</strong> {order.quantity}</div>
+            <div><strong>Date:</strong> {new Date(order.purchasedAt).toLocaleDateString()}</div>
+            <div className="divider"></div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div>No orders yet</div>
+    )}
+  </Col>
+</Row>
 
           <Row className="mt-4">
             <Col>

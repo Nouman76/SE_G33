@@ -5,11 +5,13 @@ import "../styles/Shop.css";
 import successIcon from "../assets/Group.svg";
 import trashIcon from "../assets/trash.svg";
 import { useCart } from "./CartContext";
+import axios from "axios";
 
 const Shop = () => {
   const { cartItems, removeFromCart } = useCart();
   const [step, setStep] = useState(1);
   const [isMounted, setIsMounted] = useState(false);
+  const { clearCart } = useCart();
   const [customerDetails, setCustomerDetails] = useState({
     firstName: "",
     lastName: "",
@@ -19,7 +21,7 @@ const Shop = () => {
     phone: "",
     email: "",
   });
-  const [ setOrderDetails] = useState(null);
+  const [orderDetails, setOrderDetails] = useState(null); 
   const deliveryCharge = 10.0;
 
   // Debug cart items
@@ -70,19 +72,59 @@ const Shop = () => {
       });
   };
 
-  const handleConfirmOrder = () => {
-    const total = calculateTotalPrice(cartItems) + deliveryCharge;
-    setOrderDetails({
-      items: cartItems,
-      name: `${customerDetails.firstName} ${customerDetails.lastName}`,
-      address: customerDetails.address,
-      paymentMethod: "Cash on Delivery",
-      total,
-    });
-
-    setStep(3);
+  const handleConfirmOrder = async () => {
+    console.log("handleConfirmOrder called");
+    
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Token from localStorage:", token);
+      
+      if (!token) {
+        alert("Please login to place an order");
+        return;
+      }
+  
+      // Prepare products data
+      const productsToAdd = cartItems.map(item => ({
+        productId: item._id || item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.qty
+      }));
+  
+      console.log("Prepared products to add:", productsToAdd);
+  
+      // Add to buyer's purchased products
+      const response = await axios.post(
+        "http://localhost:8000/buyer/add-purchases",
+        { products: productsToAdd },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+  
+      console.log("Purchase API response:", response.data);
+  
+      // Proceed with checkout
+      const total = calculateTotalPrice(cartItems) + deliveryCharge;
+      setOrderDetails({
+        items: cartItems,
+        name: `${customerDetails.firstName} ${customerDetails.lastName}`,
+        address: customerDetails.address,
+        paymentMethod: "Cash on Delivery",
+        total,
+      });
+      clearCart();
+      setStep(3);
+    } catch (error) {
+      console.error("Checkout error:", error);
+      console.error("Error response:", error.response?.data);
+      alert("Failed to complete purchase. Please try again.");
+    }
   };
-
   return (
     <div className="shop-container">
       <Container>
@@ -312,7 +354,7 @@ const Shop = () => {
   </div>
 </div>
 
-                  <div className="checkout-btn" onClick={() => setStep(3)}>Place Order</div>
+<div className="checkout-btn" onClick={handleConfirmOrder}>Place Order</div>
                 </div>
            </Col>
          </Row>

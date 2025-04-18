@@ -8,7 +8,14 @@ const userSchema = new mongoose.Schema({
    phoneNumber: { type: String, required: true },
    role: { type: String, enum: ["buyer", "admin"], default: "buyer" },  // Buyer or Admin
    myOrders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],  
-   createdAt: { type: Date, default: Date.now }
+   createdAt: { type: Date, default: Date.now },
+   purchasedProducts: [{
+      productId: { type: mongoose.Schema.Types.ObjectId, required: true },
+      name: { type: String, required: true },
+      price: { type: Number, required: true },
+      quantity: { type: Number, required: true },
+      purchasedAt: { type: Date, default: Date.now }
+    }],
 });
 
 const User = mongoose.model("Buyer", userSchema);

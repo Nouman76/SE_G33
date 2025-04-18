@@ -2,7 +2,52 @@ import Buyer from "../models/buyer.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+// Add this to your buyer controller
+export const addPurchasedProducts = async (req, res) => {
+  console.log("\n--- ADD PURCHASES START ---");
+  console.log("Request body:", JSON.stringify(req.body, null, 2));
+  
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    console.log("Token exists:", !!token);
 
+    if (!token) {
+      console.log("Unauthorized - no token");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const decoded = jwt.verify(token, "yourSecretKey");
+    console.log("Decoded token ID:", decoded.id);
+
+    const buyer = await Buyer.findById(decoded.id);
+    console.log("Buyer found:", !!buyer);
+    console.log("Current purchasedProducts:", buyer?.purchasedProducts?.length || 0);
+
+    if (!buyer) {
+      console.log("Buyer not found");
+      return res.status(404).json({ message: "Buyer not found" });
+    }
+
+    console.log("Adding products:", req.body.products);
+    buyer.purchasedProducts.push(...req.body.products);
+    
+    const savedBuyer = await buyer.save();
+    console.log("After save - purchasedProducts count:", savedBuyer.purchasedProducts.length);
+
+    res.json({ 
+      success: true,
+      purchasedProducts: savedBuyer.purchasedProducts 
+    });
+    console.log("--- ADD PURCHASES SUCCESS ---\n");
+  } catch (error) {
+    console.error("ADD PURCHASES ERROR:", error);
+    res.status(500).json({ 
+      success: false,
+      message: "Error adding purchases",
+      error: error.message 
+    });
+  }  
+};
 
 export const updateBuyerProfile = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -79,32 +124,47 @@ export const loginBuyer = async (req, res) => {
 
 
 export const getBuyerProfile = async (req, res) => {
-    try {
-      const token = req.headers.authorization.split(' ')[1];  // Extract token
-      if (!token) {
-        return res.status(401).json({ message: "Authorization token missing" });
-      }
-  
-      const decodedToken = jwt.verify(token, 'yourSecretKey');  // Verify token
-      const buyer = await Buyer.findById(decodedToken.id);  // Fetch buyer by ID
-  
-      if (!buyer) {
-        return res.status(404).json({ message: "Buyer not found" });
-      }
-  
-      const buyerData = {
-        name: buyer.name,
-        email: buyer.email,
-        address: buyer.address,
-        phoneNumber: buyer.phoneNumber,
-      };
-  
-      res.status(200).json(buyerData);
-    } catch (error) {
-      console.error("Error fetching buyer profile:", error);
-      res.status(400).json({ message: "Error fetching buyer profile", error: error.message });
+  console.log("\n--- GET PROFILE START ---");
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    console.log("Token exists:", !!token);
+
+    if (!token) {
+      console.log("Unauthorized - no token");
+      return res.status(401).json({ message: "Authorization token missing" });
     }
-  };
+
+    const decodedToken = jwt.verify(token, 'yourSecretKey');
+    console.log("Decoded token ID:", decodedToken.id);
+
+    const buyer = await Buyer.findById(decodedToken.id)
+      .select('name email address phoneNumber purchasedProducts')
+      .lean();
+    
+    console.log("Buyer found:", !!buyer);
+    console.log("Purchased products count:", buyer?.purchasedProducts?.length || 0);
+
+    if (!buyer) {
+      console.log("Buyer not found");
+      return res.status(404).json({ message: "Buyer not found" });
+    }
+
+    const responseData = {
+      name: buyer.name,
+      email: buyer.email,
+      address: buyer.address,
+      phoneNumber: buyer.phoneNumber,
+      orders: buyer.purchasedProducts || []
+    };
+
+    console.log("Returning profile data");
+    console.log("--- GET PROFILE SUCCESS ---\n");
+    res.status(200).json(responseData);
+  } catch (error) {
+    console.error("GET PROFILE ERROR:", error);
+    res.status(400).json({ message: "Error fetching buyer profile", error: error.message });
+  }
+};
   
 
 // Change buyer password

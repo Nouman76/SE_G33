@@ -24,6 +24,7 @@ const Navbar = () => {
 
   // Save this logic for the profile page
   const handleLogout = () => {
+    localStorage.setItem("isLoggedIn", "false");
     localStorage.removeItem("token");
     window.location.href = "/";
   };

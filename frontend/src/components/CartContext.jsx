@@ -14,7 +14,22 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+useEffect(() => {
+  const checkLoginStatus = () => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    if (!isLoggedIn) {
+      setCartItems([]);
+      localStorage.removeItem("cart");
+    }
+  };
 
+  // Check on initial load
+  checkLoginStatus();
+
+  // Optional: Listen for storage events (if logging out from another tab)
+  window.addEventListener('storage', checkLoginStatus);
+  return () => window.removeEventListener('storage', checkLoginStatus);
+}, []);
   // Load cart from localStorage on first render
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
@@ -28,7 +43,10 @@ export const CartProvider = ({ children }) => {
     }
     setIsInitialized(true);
   }, []);
-
+  const resetCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("cart"); // Clear from localStorage too
+  };
   // Save cart to localStorage whenever it updates
   useEffect(() => {
     if (isInitialized) {
@@ -91,6 +109,7 @@ export const CartProvider = ({ children }) => {
         getTotalItems,
         getTotalPrice,
         loading,
+        resetCart,
       }}
     >
       {children}
