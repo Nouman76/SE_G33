@@ -1,0 +1,144 @@
+/* Main section styling */
+.shop-category-cat {
+    margin-bottom: 30px;
+}
+.shop-category {
+    background-color: #f8f9fa;
+    padding: 30px 0;
+}
+
+/* Category Title */
+.category-title-text {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: #001c30;
+}
+
+/* View All Button */
+.view-all-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.view-all-btn {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #001c30;
+    cursor: pointer;
+}
+
+/* Product Display Section */
+.display-products {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.display-products > .row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap; /* Prevents wrapping */
+}
+
+/* Product Column: Ensures all items take equal width */
+.display-products .col-md-4 {
+    flex: 0 1 32%; /* 3 items in row with space-between */
+    max-width: 32%;
+}
+
+/* Product Row */
+.product-row {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+/* Product Image */
+.product-img-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-img {
+    width: 100%;
+    border-radius: 5px;
+    height: 110px;
+}
+
+/* Product Details */
+.product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.product-category {
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #8e96a4;
+}
+
+.product-name {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #001c30;
+}
+
+/* Shop Now (Clickable) */
+.shop-now {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #f8f9fa;
+    cursor: pointer;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #001c30;
+    border-radius: 20px;
+    width: 110px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .category-title-text,
+    .view-all-container {
+        text-align: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .display-products {
+        text-align: center;
+    }
+
+    .shop-now {
+        text-align: center;
+    }
+
+    /* Allow wrapping on smaller screens */
+    .display-products > .row {
+        flex-wrap: wrap;
+    }
+
+    .display-products .col-md-4 {
+        flex: 0 1 48%; /* Two columns per row on smaller screens */
+        max-width: 48%;
+    }
+}
+
+@media (max-width: 576px) {
+    .display-products .col-md-4 {
+        flex: 0 1 100%; /* One column per row on extra small screens */
+        max-width: 100%;
+    }
+}
