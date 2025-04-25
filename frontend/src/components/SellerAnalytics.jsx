@@ -11,9 +11,12 @@ const SellerAnalytics = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    // Clear all seller-related items from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("seller");
     localStorage.removeItem("sellerId");
+    
+    // Redirect to admin login page
     navigate("/admin");
   };
 
@@ -34,6 +37,8 @@ const SellerAnalytics = () => {
         if (!response.data.success || !response.data.analytics) {
           throw new Error('Invalid analytics data received');
         }
+
+        // Ensure analytics data has proper structure
         const safeAnalytics = {
             ...response.data.analytics,
             totalSoldProducts: response.data.analytics.totalSoldProducts || 0,
