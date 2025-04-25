@@ -193,6 +193,7 @@ const Profile = () => {
                 <>
                   <input
                     type="text"
+                    className="profile-namee"
                     name="name"
                     placeholder="Name"
                     value={formValues.name}
@@ -200,8 +201,10 @@ const Profile = () => {
                   />
                   <input
                     type="text"
+                    className="profile-addres"
                     name="address"
                     placeholder="Address"
+                    
                     value={formValues.address}
                     onChange={handleInputChange}
                   />
@@ -219,12 +222,14 @@ const Profile = () => {
                   <input
                     type="email"
                     name="email"
+                    className="profile-emaill"
                     placeholder="Email"
                     value={formValues.email}
                     onChange={handleInputChange}
                   />
                   <input
                     type="text"
+                    className="profile-phonee"
                     name="phoneNumber"
                     placeholder="Phone Number"
                     value={formValues.phoneNumber}
@@ -358,6 +363,7 @@ const Profile = () => {
                   <Col md={6}>
                     <input
                       type="password"
+                      className="profile-pasword"
                       placeholder="Old Password"
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
@@ -367,6 +373,7 @@ const Profile = () => {
                   <Col md={6}>
                     <input
                       type="password"
+                      className="profile-pasword"
                       placeholder="New Password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}

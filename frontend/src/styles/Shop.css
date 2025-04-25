@@ -1,4 +1,3 @@
-/* General Container Styling */
 .shop-container {
   background-color: #f5f7f8;
   font-family: 'Roboto', sans-serif;
@@ -82,17 +81,20 @@
   border-radius: 10px;
 }
 
+/* Product Name */
 .cart-item-name {
   font-weight: 700;
   font-size: 16px;
   color: #001c30;
 }
 
+/* Price Styling */
 .cart-item-price {
   font-weight: bold;
-  color: #16a34a; 
+  color: #16a34a; /* Green */
 }
 
+/* Remove Button */
 .cart-item-remove {
   cursor: pointer;
   font-size: 18px;
@@ -104,6 +106,7 @@
   border-radius: 15px;
 }
 
+/* Cart Weight Section */
 .cart-weight{
   font-size: 24px;
   font-weight: 700;
@@ -111,27 +114,32 @@
   margin-bottom: 10px;
 }
 
+/* Divider Line */
 .divider {
   height: 1px;
   background-color: #8e96a4;
   margin: 10px 0;
 }
 
+/* Subtotal, Delivery Charge, and Total Section */
 .summary-section {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
 }
 
+/* Total Row Styling */
 .summary-section.total {
   font-weight: bold;
   font-size: 18px;
 }
 
+/* Aligning Values to the Right */
 .summary-value {
   text-align: right;
 }
 
+/* Checkout Button */
 .checkout-btn {
   background: #f4ce14;
   padding: 12px;
@@ -143,13 +151,15 @@
   font-size: 20px;
 }
 
+/* Product Image Styling */
 .cart-item-image {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
 }
 
-
+/* Checkout Form */
+/* Billing Details Section */
 .billing-title
 {
   font-size: 24px;
@@ -168,7 +178,7 @@
 }
 
 
-
+/* Input Container Styling */
 .input-container {
   background-color: #F5F7F8;
   border: 1px solid #B6BBC4;
@@ -194,6 +204,7 @@
   font-weight: 500;
 }
 
+/* Save Button */
 .save-btn {
   text-align: center;
   background-color: #001C30;
@@ -206,17 +217,18 @@
   text-transform: uppercase;
 }
 
+/* Confirmation Card - Centering Fix */
 .confirmation-card {
   text-align: center;
   padding: 25px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   max-width: 600px;
-  margin: 50px auto;  
+  margin: 50px auto;  /* Centering Horizontally */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* Ensuring it's centered */
 }
 
 .confirmation-step {
@@ -395,4 +407,14 @@
 }
 .payment-option label {
   white-space: nowrap;
+}
+
+.input-error {
+  border: 1px solid red;
+}
+
+.error-text {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
 }
