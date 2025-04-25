@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import '../styles/NearestPetCare.css';
+import '../styles/NearestPetCare.css'; // Import the CSS file
 
 const NearestPetCare = () => {
   const [location, setLocation] = useState(null);
   const [petCareLocations, setPetCareLocations] = useState([]);
 
   useEffect(() => {
+    // Get the user's current location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
@@ -30,6 +31,8 @@ const NearestPetCare = () => {
         console.error('Error fetching data from Overpass API:', error);
       });
   };
+
+  // Custom red dot icon for markers
   const customIcon = new L.Icon({
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-red.png',
     iconSize: [25, 41],
