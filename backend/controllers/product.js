@@ -1,6 +1,6 @@
 import Product from "../models/product.js";
 
-// Create Product
+
 export const createProduct = async (req, res) => {
   try {
     const { name, description, price, stock, category, seller, images } = req.body;
@@ -17,8 +17,7 @@ export const createProduct = async (req, res) => {
     res.status(500).json({ message: "Error adding product!", error: error.message });
   }
 };
-// Get Products by Category (limit 3)
-// In your controller (product.js)
+
 export const getProductsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
@@ -35,18 +34,16 @@ export const getProductsByCategory = async (req, res) => {
     res.status(500).json({ message: "Error fetching products by category", error: error.message });
   }
 };
-// Add Review to Product
+
 export const addReview = async (req, res) => {
   try {
     const { productId } = req.params;
     const { buyerId, rating, comment } = req.body;
 
-    // Validate input
     if (!buyerId || !rating || !comment) {
       return res.status(400).json({ message: "Buyer ID, rating, and comment are required!" });
     }
 
-    // Find the product and add the review
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found!" });
@@ -62,19 +59,16 @@ export const addReview = async (req, res) => {
 };
 
 
-// View All Products
-// View All Products OR Search by Name/Category
+
 export const getProducts = async (req, res) => {
   try {
     const { search, sellerId } = req.query;
     let query = {};
     
-    // If sellerId is provided, filter by seller
     if (sellerId) {
       query.seller = sellerId;
     }
 
-    // If search is provided, add case-insensitive name/category filter
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: "i" } },
@@ -93,7 +87,6 @@ export const getProducts = async (req, res) => {
 
 
 
-// Get a Single Product by ID
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -109,7 +102,6 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// Update Product by ID
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -125,11 +117,10 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// Delete Product
 export const deleteProduct = async (req, res) => {
   try {
-    const { id } = req.params; // Get product ID from request URL
-    const product = await Product.findByIdAndDelete(id); // Delete product by ID
+    const { id } = req.params; 
+    const product = await Product.findByIdAndDelete(id); 
 
     if (!product) {
       return res.status(404).json({ message: "Product not found!" });

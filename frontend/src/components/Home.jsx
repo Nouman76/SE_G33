@@ -9,7 +9,7 @@ import laptopIcon from '../assets/cat_a.png';
 import tvIcon from '../assets/dog_a.png';
 import cameraIcon from '../assets/pet_med.png';
 import ShopCategory from './ShopCategory';
-import Chatbot from './Chatbot'; // Import the Chatbot component
+import Chatbot from './Chatbot'; 
 
 const Home = () => {
   const navigate = useNavigate();
@@ -59,7 +59,6 @@ const Home = () => {
 
       <ShopCategory />
       
-      {/* Add the Chatbot component */}
       <Chatbot />
     </div>
   );

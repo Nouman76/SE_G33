@@ -4,7 +4,7 @@
     padding: 50px 0;
 }
 
-/* Title */
+
 .signup-title {
     font-size: 36px;
     font-weight: 700;
@@ -12,7 +12,7 @@
     margin-bottom: 40px;
 }
 
-/* Form Styles */
+
 .signup-form input {
     width: 100%;
     border: 1px solid #ccc;
@@ -29,7 +29,7 @@
     box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
 }
 
-/* Category Selection */
+
 .category-selection {
     margin: 20px 0;
 }
@@ -45,7 +45,6 @@
     gap: 10px;
 }
 
-/* Category Buttons */
 .category-btn {
     background-color: #eee;
     border: 1px solid #ccc;
@@ -67,3 +66,21 @@
 .category-btn:hover {
     background-color: #ddd;
 }
+.ssuccess-msg {
+    margin-top: 10px;
+    color: #155724;
+    background-color: #d4edda;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .eerror-msg {
+    margin-top: 10px;
+    color: #721c24;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+  }
+  

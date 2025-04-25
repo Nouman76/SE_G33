@@ -4,7 +4,6 @@
   background-color: #f4f4f4;
 }
 
-/* Sidebar Navigation */
 .dashboard-nav {
   width: 250px;
   height: 100vh;
@@ -17,7 +16,6 @@
   text-align: center;
 }
 
-/* Admin Panel Heading */
 .admin-title {
   font-family: "Roboto", sans-serif;
   font-size: 24px;
@@ -32,32 +30,32 @@
   margin: 0 auto 15px auto;
 }
 
-/* Sidebar List */
 .dashboard-nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* Sidebar List Items */
-.dashboard-nav li {
+.dashboard-nav li,.nav-link {
   padding: 15px 20px;
   font-family: "Roboto", sans-serif;
   font-size: 24px;
   border-bottom: 1px solid #8e96a4;
   cursor: pointer;
   transition: background 0.3s, color 0.3s;
-  color: #f4ce14; /* Updated color */
+  color: #f4ce14; 
 }
-
-.dashboard-nav li:hover {
+.nav-link:hover
+{
+  text-decoration: none;
+}
+.dashboard-nav li:hover,.nav-link:hover {
   background: #02475e;
   color: white;
 }
 
-/* Dynamic Content Area */
 .dynamic-content {
-  margin-left: 270px; /* Adjusted for sidebar */
+  margin-left: 270px; 
   padding: 20px;
   flex-grow: 1;
   width: calc(100% - 270px);

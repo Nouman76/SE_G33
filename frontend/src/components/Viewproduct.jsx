@@ -19,7 +19,6 @@ const ViewProducts = () => {
 
   useEffect(() => {
     if (products.length > 0) {
-      // Extract unique categories
       const uniqueCategories = [...new Set(products.map(product => product.category))];
       setCategories(uniqueCategories);
     }
@@ -116,7 +115,6 @@ const ViewProducts = () => {
     }
   };
 
-  // Function to truncate description text
   const truncateDescription = (text, maxLength = 60) => {
     if (text.length <= maxLength) return text;
     return text.substr(0, maxLength) + '...';
@@ -185,7 +183,7 @@ const ViewProducts = () => {
                 
                 <div className="vip-product-meta">
                   <div className="vip-price-stock">
-                    <p className="vip-product-price">${product.price.toFixed(2)}</p>
+                    <p className="vip-product-price">Rs {product.price.toFixed(2)}</p>
                     <p className={`vip-product-stock ${product.stock < 5 ? 'vip-low-stock' : ''}`}>
                       {product.stock === 0 ? (
                         <span className="vip-out-of-stock">Out of Stock</span>

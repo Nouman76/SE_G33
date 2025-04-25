@@ -10,6 +10,7 @@ const ContactUs = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 15);
@@ -18,6 +19,8 @@ const ContactUs = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
+    setSuccessMessage("");
 
     if (!name || !email || !message) {
       setError("Please fill in all required fields.");
@@ -37,22 +40,19 @@ const ContactUs = () => {
       .then(
         (response) => {
           console.log("Email sent successfully:", response);
-          alert("We have received your query! We'll get back to you shortly.");
+          setSuccessMessage("We have received your query! We'll get back to you shortly.");
           setName("");
           setEmail("");
           setAddress("");
           setPhoneNumber("");
           setMessage("");
-
-          setError(""); 
         },
         (error) => {
           console.log("Error sending email:", error);
-          alert("Sorry, there was an error sending your message. Please try again.");
+          setError("Sorry, there was an error sending your message. Please try again.");
         }
       );
   };
-  
 
   return (
     <div className="contact-page">
@@ -73,8 +73,8 @@ const ContactUs = () => {
           </Col>
         </Row>
 
-        {/* Display error message if any */}
         {error && <div className="error-message">{error}</div>}
+        {successMessage && <div className="success-message">{successMessage}</div>}
 
         <div className="contact-form">
           <Row>
@@ -132,12 +132,11 @@ const ContactUs = () => {
             </Col>
           </Row>
 
-          <button className="custom-btn" onClick={handleSubmit}>
+          <button className="custom-buttton" onClick={handleSubmit}>
             Send Message
           </button>
         </div>
 
-        {/* Google Map Section */}
         <Row>
           <Col>
             <div className="map-container">

@@ -24,7 +24,7 @@ const Shop = () => {
   const [orderDetails, setOrderDetails] = useState(null); 
   const deliveryCharge = 10.0;
 
-  // Debug cart items
+  
   useEffect(() => {
     setIsMounted(true);
     console.log("Cart items from context:", cartItems);
@@ -65,7 +65,7 @@ const Shop = () => {
       )
       .then((response) => {
         alert("Details Sent Successfully!");
-        handleConfirmOrder(); // Proceed to next step after successful submission
+        handleConfirmOrder(); 
       })
       .catch((error) => {
         alert("Error Sending Email: " + error.text);
@@ -80,7 +80,6 @@ const Shop = () => {
         return;
       }
   
-      // First validate stock availability
       const stockCheck = await Promise.all(
         cartItems.map(async (item) => {
           const response = await axios.get(
@@ -95,7 +94,6 @@ const Shop = () => {
         })
       );
   
-      // Prepare products data
       const productsToAdd = cartItems.map(item => ({
         productId: item._id || item.id,
         name: item.name,
@@ -103,7 +101,6 @@ const Shop = () => {
         quantity: item.qty
       }));
   
-      // Add to buyer's purchased products (this will also reduce stock)
       const response = await axios.post(
         "http://localhost:8000/buyer/add-purchases",
         { products: productsToAdd },
@@ -115,7 +112,7 @@ const Shop = () => {
         }
       );
   
-      // Proceed with checkout
+     
       const total = calculateTotalPrice(cartItems) + deliveryCharge;
       setOrderDetails({
         items: cartItems,
@@ -135,10 +132,10 @@ const Shop = () => {
   return (
     <div className="shop-container">
       <Container>
-        {/* Section Headings */}
+        
         <div className="cart-title">Cart</div>
 
-        {/* Progress Indicator */}
+       
         <div className="progress-container">
           <Row>
             {["Shopping Cart", "Shipping & Checkout", "Confirmation"].map((title, index) => (
@@ -153,13 +150,13 @@ const Shop = () => {
           </Row>
         </div>
 
-        {/* 🛒 Shopping Cart Section */}
+        
         {step === 1 && (
           <div className="cart-step">
             <Row>
               <Col md={8}>
                 <div className="products-in-cart">
-                  {/* Cart Header */}
+                  
                   <Row className="cart-header">
                     <Col md={6}>Product Details</Col>
                     <Col md={2}>Price</Col>
@@ -168,7 +165,7 @@ const Shop = () => {
                     <Col md={1} className="text-center"></Col>
                   </Row>
 
-                  {/* Cart Items */}
+                  
                   {cartItems.map((item) => (
                     <Row key={item.id || item._id} className="cart-item">
                       <Col md={6} className="cart-item-details">
@@ -188,7 +185,7 @@ const Shop = () => {
 
 
 
-              {/* Cart Summary Section */}
+              
               <Col md={4}>
                 <div className="cart-summary">
                   <div className="cart-weight">Total Cart</div>
@@ -213,11 +210,11 @@ const Shop = () => {
           </div>
         )}
 
-        {/* 🚚 Shipping & Checkout Section */}
+        
         {step === 2 && (
          <div className="checkout-step">
          <Row>
-           {/* Billing Details Section */}
+           
            <Col md={8}>
              <div className="billing-details">
                <Row>
@@ -227,7 +224,7 @@ const Shop = () => {
                <div className="divider"></div>
        
                <div className="get-details">
-                 {/* First Name & Last Name */}
+                 
                  <Row>
                    <Col md={6}>
                      <div className="input-container">
@@ -253,7 +250,7 @@ const Shop = () => {
                    </Col>
                  </Row>
        
-                 {/* Address */}
+                 
                  <Row>
                    <Col md={12}>
                      <div className="input-container">
@@ -268,7 +265,7 @@ const Shop = () => {
                    </Col>
                  </Row>
        
-                 {/* City & Postal Code */}
+                 
                  <Row>
                    <Col md={6}>
                      <div className="input-container">
@@ -294,7 +291,7 @@ const Shop = () => {
                    </Col>
                  </Row>
        
-                 {/* Phone & Email */}
+                 
                  <Row>
                    <Col md={6}>
                      <div className="input-container">
@@ -323,12 +320,12 @@ const Shop = () => {
        
                <div className="divider"></div>
        
-               {/* Save Button */}
+               
                <div className="save-btn" onClick={handleSubmit}>Save</div>
              </div>
            </Col>
        
-           {/* Shopping Cart Summary Section */}
+           
            <Col md={4}>
                <div className="cart-summary">
                   <div className="cart-weight">Total Cart</div>
@@ -354,7 +351,7 @@ const Shop = () => {
       id="cod"
       name="paymentMethod"
       value="Cash on Delivery"
-      checked={true} // Default selection
+      checked={true} 
       readOnly
     />
     <label htmlFor="cod">Cash on Delivery</label>
@@ -368,22 +365,22 @@ const Shop = () => {
        </div>
         )}
 
-        {/* ✅ Order Confirmation Section */}
+        
         {step === 3 && (
           <div className="confirmation-step">
-            {/* Success Message Block */}
+            
             <div className="order-success">
               <img src={successIcon} alt="Success" className="success-icon" />
               <div className="success-title">Your Order Has Been Fulfilled</div>
               <div className="success-subtext">I'm grateful. We've received your order.</div>
             </div>
 
-            {/* Order Summary Block */}
+            
             <div className="order-summary">
               <div className="summary-title">Order Details</div>
               <div className="divider"></div>
 
-              {/* Order Items List */}
+              
               {cartItems.map((item, index) => (
                 <div key={index} className="order-item">
                   <div className="item-label">Item Name:</div>
@@ -391,19 +388,19 @@ const Shop = () => {
                 </div>
               ))}
 
-              {/* Subtotal */}
+             
               <div className="order-item">
                 <div className="item-label">Subtotal:</div>
                 <div className="item-value">Rs.{calculateTotalPrice(cartItems).toFixed(2)}</div>
               </div>
 
-              {/* Delivery Charge */}
+              
               <div className="order-item">
                 <div className="item-label">Delivery Charge:</div>
                 <div className="item-value">Rs.{deliveryCharge.toFixed(2)}</div>
               </div>
 
-              {/* Total */}
+              
               <div className="order-item">
                 <div className="item-label">Total:</div>
                 <div className="total-price">
@@ -413,7 +410,7 @@ const Shop = () => {
 
               <div className="divider"></div>
 
-              {/* Placeholder for Name & Address */}
+              
               <div className="order-item">
                 <div className="item-label">Name:</div>
                 <div className="item-value">{customerDetails.firstName} {customerDetails.lastName}</div>

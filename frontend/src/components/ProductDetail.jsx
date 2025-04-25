@@ -16,7 +16,7 @@ const ProductDetail = () => {
       .then(res => {
         const productData = res.data;
         setProduct(productData);
-        setReviews(productData.reviews || []); // Assuming reviews are included in the product data
+        setReviews(productData.reviews || []); 
       })
       .catch(err => console.error("Error fetching product:", err));
   }, [id]);
@@ -24,7 +24,9 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product);
+      window.location.href= "../shop";
     }
+     
   };
 
   if (!product) return <div>Loading...</div>;
@@ -44,7 +46,7 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* Reviews Section */}
+     
       <div className="reviews-section">
         <h3>Customer Reviews</h3>
         {reviews.length > 0 ? (

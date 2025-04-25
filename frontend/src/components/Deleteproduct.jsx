@@ -4,20 +4,34 @@ import "../styles/Deleteproduct.css";
 
 const DeleteProduct = () => {
   const [productId, setProductId] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleDelete = async () => {
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    if (!productId) {
+      setErrorMessage("Please enter a Product ID.");
+      return;
+    }
+
     try {
       await axios.delete(`http://localhost:8000/products/${productId}`);
-      alert("Product deleted successfully!");
+      setSuccessMessage("Product deleted successfully!");
       setProductId("");
     } catch (error) {
-      alert("Error deleting product!");
+      setErrorMessage("Error deleting product!");
     }
   };
 
   return (
     <div className="delete-product-container">
       <h2>Delete Product</h2>
+
+      {successMessage && <div className="ssssuccess-message">{successMessage}</div>}
+      {errorMessage && <div className="eeeerror-message">{errorMessage}</div>}
+
       <input 
         type="text" 
         placeholder="Enter Product ID" 

@@ -22,7 +22,7 @@ const Navbar = () => {
     setIsNavCollapsed(!isNavCollapsed);
   };
 
-  // Save this logic for the profile page
+  
   const handleLogout = () => {
     localStorage.setItem("isLoggedIn", "false");
     localStorage.removeItem("token");

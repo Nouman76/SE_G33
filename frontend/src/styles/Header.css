@@ -3,7 +3,7 @@
   background-color: #ffffff;
 }
 
-/* Top Bar */
+
 .top-bar {
   display: flex;
   justify-content: space-between;
@@ -34,7 +34,7 @@
   gap: 5px;
 }
 
-/* Navbar */
+
 .custom-navbar {
   display: flex;
   align-items: center;
@@ -105,7 +105,7 @@
   margin: 0 10px;
 }
 
-/* Search Bar */
+
 .search-bar-section {
   display: flex;
   align-items: center;

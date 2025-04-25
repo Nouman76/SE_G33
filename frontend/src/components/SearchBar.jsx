@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import { Container, Row, Col } from "bootstrap-4-react";
 import SearchIcon from "../assets/search.svg";
-import productImg from "../assets/product.png"; // Import the product image
+import productImg from "../assets/product.png"; 
 import "../styles/SearchBar.css";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +20,6 @@ const SearchBar = () => {
         const data = await response.json();
         console.log("Fetched product data:", data);
 
-        // Use data.products if response is an object containing the array
         setAllProducts(Array.isArray(data) ? data : data.products || []);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -63,7 +63,6 @@ const SearchBar = () => {
     }
   };
 
-  // Close results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest('.search-container')) {
@@ -82,7 +81,7 @@ const SearchBar = () => {
       <Container>
         <Row className="header-row">
           <Col md={2} className="logo-container">
-            <span className="top-logo">PAW PAL</span>
+            <Link to="/" className="top-logo">PAW PAL</Link>
           </Col>
           <Col md={8} className="search-container">
             <div className="search-bar-wrapper">
@@ -105,7 +104,7 @@ const SearchBar = () => {
                     >
                       <div className="search-result-img-container">
                         <img 
-                          src={productImg} // Use the imported product image
+                          src={productImg}
                           alt={product.name} 
                           className="search-result-img" 
                         />

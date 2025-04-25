@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Product from "../models/product.js";
 
-// Seller Login
 export const loginSeller = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -27,31 +26,26 @@ export const getSellerAnalytics = async (req, res) => {
   console.log('\n=== ANALYTICS REQUEST STARTED ===');
   
   try {
-    // 1. Authentication Check
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-    // 2. Token Verification
     const decoded = jwt.verify(token, "yourSecretKey");
 
-    // 3. Seller Verification
     const seller = await Seller.findById(decoded.id).lean();
     if (!seller) return res.status(404).json({ message: "Seller not found" });
 
-    // 4. Fetching Products with purchases
     const products = await Product.find({ seller: decoded.id })
       .populate({
         path: 'purchases',
-        select: 'quantity purchasedAt price' // Make sure to include price in the purchase
+        select: 'quantity purchasedAt price' 
       })
       .lean();
 
-    // 5. Calculate product stats and filter sold products
+   
     const productsWithStats = products
       .map(product => {
         const salesCount = product.purchases?.reduce((sum, purchase) => sum + purchase.quantity, 0) || 0;
         const revenue = product.purchases?.reduce((sum, purchase) => {
-          // Use purchase price if available, otherwise fall back to product price
           const price = purchase.price || product.price || 0;
           return sum + (purchase.quantity * price);
         }, 0) || 0;
@@ -62,7 +56,7 @@ export const getSellerAnalytics = async (req, res) => {
           revenue
         };
       })
-      .filter(product => product.salesCount > 0); // Only keep sold products
+      .filter(product => product.salesCount > 0); 
 
     const totalSales = productsWithStats.reduce((sum, p) => sum + p.salesCount, 0);
     const totalRevenue = productsWithStats.reduce((sum, p) => sum + p.revenue, 0);

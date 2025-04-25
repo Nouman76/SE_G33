@@ -1,10 +1,7 @@
 import Buyer from "../models/buyer.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-// import Product from "../models/product.js";
-// Add this to your buyer controller
-import Product from "../models/product.js"; // Make sure to import Product model
-// If you created the separate function in product.js
+import Product from "../models/product.js"; 
 import { reduceProductStock } from "./product.js";
 export const addPurchasedProducts = async (req, res) => {
   console.log("\n--- ADD PURCHASES START ---");
@@ -33,12 +30,10 @@ export const addPurchasedProducts = async (req, res) => {
 
     console.log("Adding products:", req.body.products);
     
-    // 1. First reduce stock and record purchases for all products
     const stockUpdates = req.body.products.map(async (product) => {
       try {
         console.log(`Processing product ${product.productId}, quantity: ${product.quantity}`);
         
-        // Update stock and record purchase in one atomic operation
         const updatedProduct = await Product.findByIdAndUpdate(
           product.productId,
           { 
@@ -59,7 +54,6 @@ export const addPurchasedProducts = async (req, res) => {
         }
         
         if (updatedProduct.stock < 0) {
-          // Rollback the stock change if insufficient
           await Product.findByIdAndUpdate(
             product.productId,
             { $inc: { stock: product.quantity } }
@@ -77,7 +71,6 @@ export const addPurchasedProducts = async (req, res) => {
 
     await Promise.all(stockUpdates);
     
-    // 2. Then add to buyer's purchased products
     buyer.purchasedProducts.push(...req.body.products.map(p => ({
       ...p,
       purchasedAt: new Date()
@@ -125,7 +118,6 @@ export const updateBuyerProfile = async (req, res) => {
   }
 };
 
-// Register a new buyer
 export const registerBuyer = async (req, res) => {
   const { name, email, password, address, phoneNumber } = req.body;
   
@@ -152,7 +144,6 @@ export const registerBuyer = async (req, res) => {
   }
 };
 
-// Login for existing buyer
 export const loginBuyer = async (req, res) => {
   const { email, password } = req.body;
 
@@ -166,7 +157,6 @@ export const loginBuyer = async (req, res) => {
     return res.status(400).json({ message: "Invalid credentials" });
   }
 
-  // Generate JWT token without secret key or environment variable
   const token = jwt.sign({ id: buyer._id, email: buyer.email }, "yourSecretKey", { expiresIn: "1h" });
 
   res.status(200).json({ message: "Login successful", token });
@@ -200,34 +190,29 @@ export const getBuyerProfile = async (req, res) => {
       return res.status(404).json({ message: "Buyer not found" });
     }
 
-    // Group purchased products by productId and sum quantities
     const productMap = new Map();
     
     buyer.purchasedProducts.forEach(purchase => {
       const productId = purchase.productId.toString();
       
       if (productMap.has(productId)) {
-        // Existing product - update quantity
         const existing = productMap.get(productId);
         existing.quantity += purchase.quantity;
-        // Keep the most recent purchase date
         if (new Date(purchase.purchasedAt) > new Date(existing.purchasedAt)) {
           existing.purchasedAt = purchase.purchasedAt;
         }
       } else {
-        // New product - add to map
         productMap.set(productId, {
           ...purchase,
-          purchaseId: purchase._id // Keep the purchase reference if needed
+          purchaseId: purchase._id 
         });
       }
     });
 
-    // Convert map to array of grouped products
     const groupedOrders = Array.from(productMap.values());
 
     const responseData = {
-      id: decodedToken.id, // Add the buyer ID here
+      id: decodedToken.id, 
       name: buyer.name,
       email: buyer.email,
       address: buyer.address,
@@ -248,7 +233,6 @@ export const getBuyerProfile = async (req, res) => {
 };
 
 
-// Change buyer password
 export const changePassword = async (req, res) => {
     const { oldPassword, newPassword } = req.body;
     console.log("Change password request received.");

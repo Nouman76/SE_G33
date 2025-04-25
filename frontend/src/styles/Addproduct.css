@@ -7,7 +7,7 @@
     border-radius: 8px;
 }
 
-/* Title Styling */
+
 .title {
     color:#001c30;
     font-family: "Roboto", sans-serif;
@@ -18,7 +18,6 @@
     border-radius: 5px;
 }
 
-/* Labels */
 .product-label, .description-label {
     font-family: "Roboto", sans-serif;
     font-size: 18px;
@@ -27,7 +26,6 @@
     color: #001c30;
 }
 
-/* Input Fields & Select */
 input, textarea, select {
     width: 100%;
     padding: 10px;
@@ -36,7 +34,7 @@ input, textarea, select {
     border-radius: 5px;
 }
 
-/* Add Product Button */
+
 .add-product-btn {
     text-align: center;
     font-family: "Roboto", sans-serif;

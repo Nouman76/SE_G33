@@ -11,12 +11,10 @@ const SellerAnalytics = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear all seller-related items from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("seller");
     localStorage.removeItem("sellerId");
     
-    // Redirect to admin login page
     navigate("/admin");
   };
 
@@ -38,7 +36,6 @@ const SellerAnalytics = () => {
           throw new Error('Invalid analytics data received');
         }
 
-        // Ensure analytics data has proper structure
         const safeAnalytics = {
             ...response.data.analytics,
             totalSoldProducts: response.data.analytics.totalSoldProducts || 0,
@@ -146,12 +143,10 @@ const SellerAnalytics = () => {
     );
   }
 
-  // Sort products by salesCount in descending order
   const sortedProducts = [...analytics.products]
     .filter(product => (product.salesCount || 0) > 0)
     .sort((a, b) => b.salesCount - a.salesCount);
   
-  // Get top 3 selling products
   const topThreeProducts = sortedProducts.slice(0, 3);
 
   return (

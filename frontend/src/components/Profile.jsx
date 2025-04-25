@@ -23,12 +23,12 @@ const Profile = () => {
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
 
   const [review, setReview] = useState({
-    productId: "", // Initially empty
+    productId: "", 
     rating: 1,
     comment: "",
   });
 
-  const [showReviewForm, setShowReviewForm] = useState(false); // Manage review form visibility
+  const [showReviewForm, setShowReviewForm] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -47,7 +47,6 @@ const Profile = () => {
 
         console.log("Profile API response:", response.data);
 
-        // Sort orders by quantity in descending order if orders exist
         const userData = response.data;
         if (userData.orders && userData.orders.length > 0) {
           userData.orders = userData.orders.sort((a, b) => b.quantity - a.quantity);
@@ -164,8 +163,8 @@ const Profile = () => {
       );
       if (response.data.message === "Review added successfully!") {
         alert("Review added successfully!");
-        setReview({ productId: "", rating: 1, comment: "" }); // Clear review form
-        setShowReviewForm(false); // Close the review form
+        setReview({ productId: "", rating: 1, comment: "" });
+        setShowReviewForm(false); 
       }
     } catch (error) {
       console.error("Error adding review:", error);
@@ -174,10 +173,10 @@ const Profile = () => {
   };
 
   const handleProductReview = (productId) => {
-    setReview({ ...review, productId }); // Set productId in the review state
-    setShowReviewForm(true); // Show the review form
+    setReview({ ...review, productId }); 
+    setShowReviewForm(true); 
   };
-
+  
   return (
     <div className="profile-page">
       <Container>
@@ -265,7 +264,7 @@ const Profile = () => {
           {isProfileUpdated && (
             <div className="success-message mt-2">Profile updated successfully!</div>
           )}
-
+          
           <Row className="mt-4">
             <Col>
               <div className="contact-subtitle">My Orders</div>
@@ -288,7 +287,7 @@ const Profile = () => {
                       <div className="review-form">
                         <button
                           className="custom-btn"
-                          onClick={() => handleProductReview(order.productId)} // Set the productId for the review form
+                          onClick={() => handleProductReview(order.productId)} 
                         >
                           Leave a Review
                         </button>
