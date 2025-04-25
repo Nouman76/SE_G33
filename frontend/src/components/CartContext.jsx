@@ -23,14 +23,10 @@ useEffect(() => {
     }
   };
 
-  // Check on initial load
   checkLoginStatus();
-
-  // Optional: Listen for storage events (if logging out from another tab)
   window.addEventListener('storage', checkLoginStatus);
   return () => window.removeEventListener('storage', checkLoginStatus);
 }, []);
-  // Load cart from localStorage on first render
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -45,9 +41,8 @@ useEffect(() => {
   }, []);
   const resetCart = () => {
     setCartItems([]);
-    localStorage.removeItem("cart"); // Clear from localStorage too
+    localStorage.removeItem("cart"); 
   };
-  // Save cart to localStorage whenever it updates
   useEffect(() => {
     if (isInitialized) {
       localStorage.setItem("cart", JSON.stringify(cartItems));

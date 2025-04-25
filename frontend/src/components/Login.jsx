@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";  // Updated import
+import { Link, useNavigate } from "react-router-dom";  
 import { Container, Row } from "bootstrap-4-react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
@@ -12,7 +12,7 @@ const Login = () => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate(); // Updated hook
+  const navigate = useNavigate(); 
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -26,19 +26,13 @@ const Login = () => {
     e.preventDefault();
   
     try {
-      // Send login request to backend
       const response = await axios.post("http://localhost:8000/buyer/login", formData);
-  
-      // Check if response has a token and store it in localStorage
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("isLoggedIn", "true"); // Set login status
-  
-        // Redirect to the home page after successful login
-        navigate("/"); // Navigate to the /home page
+        localStorage.setItem("isLoggedIn", "true"); 
+        navigate("/"); 
       }
     } catch (error) {
-      // Handle error: display error message if login fails
       setErrorMessage(error.response ? error.response.data.message : "Something went wrong");
     }
   };
