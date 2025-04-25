@@ -8,6 +8,8 @@ import InstagramIcon from '../assets/Instagram.svg';
 
 const Footer = () => {
   const navigate = useNavigate();
+
+  // Handle redirection to a specific category
   const handleCategoryRedirect = (category) => {
     console.log(`Redirecting to category: ${category}`);
     navigate(`/shop-category/${encodeURIComponent(category)}`);
