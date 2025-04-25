@@ -25,7 +25,7 @@ const Admin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setMessage(""); // Reset message
+    setMessage(""); 
 
     try {
       const response = await axios.post("http://localhost:8000/seller/login", formData);
@@ -35,7 +35,7 @@ const Admin = () => {
       setMessage("Login successful! Redirecting...");
       
       setTimeout(() => {
-        navigate("/admindashboard"); // Redirect to Admin Dashboard
+        navigate("/admindashboard"); 
       }, 1000);
     } catch (error) {
       alert(error.response?.data?.message || "Login failed. Please try again.");
