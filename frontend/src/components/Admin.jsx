@@ -31,6 +31,7 @@ const Admin = () => {
       const response = await axios.post("http://localhost:8000/seller/login", formData);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("seller", JSON.stringify(response.data.seller));
+      localStorage.setItem("sellerId", response.data.seller._id);
       setMessage("Login successful! Redirecting...");
       
       setTimeout(() => {
@@ -80,7 +81,7 @@ const Admin = () => {
               </div>
             </form>
             <div className="signup-text">
-                Want to Register your Store on our Platform? <Link to="/adminsignup" className="signup-link">Sign Up</Link>
+                Want to Register your Store on our Platform? <Link to="/sellersignup" className="signup-link">Sign Up</Link>
               </div>
             {message && <p className="login-message">{message}</p>}
           </div>

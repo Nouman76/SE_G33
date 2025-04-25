@@ -28,15 +28,14 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setMessage(""); // Reset message
-
+    setMessage(""); 
     try {
       const response = await axios.post("http://localhost:8000/buyer/signup", formData);
-      console.log(response.data); // Log the response for debugging
+      console.log(response.data); 
       setMessage("Signup successful! Redirecting...");
       
       setTimeout(() => {
-        navigate("/login"); // Redirect to Buyer Dashboard
+        navigate("/login"); 
       }, 1000);
     } catch (error) {
       alert(error.response?.data?.message || "Signup failed. Please try again.");
@@ -44,7 +43,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="admin-page">
+    <div className="signup-main">
       <Container>
         <Row>
           <div className="form-wrapper">

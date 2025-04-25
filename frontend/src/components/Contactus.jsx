@@ -73,7 +73,6 @@ const ContactUs = () => {
           </Col>
         </Row>
 
-        {/* Display error message if any */}
         {error && <div className="error-message">{error}</div>}
 
         <div className="contact-form">
@@ -132,12 +131,11 @@ const ContactUs = () => {
             </Col>
           </Row>
 
-          <button className="custom-btn" onClick={handleSubmit}>
+          <button className="custom-buttton" onClick={handleSubmit}>
             Send Message
           </button>
         </div>
 
-        {/* Google Map Section */}
         <Row>
           <Col>
             <div className="map-container">

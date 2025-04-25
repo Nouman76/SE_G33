@@ -7,12 +7,11 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import Seller from "./models/seller.js";
 import sellerRoutes from "./routes/seller.js";
-import productRoutes from "./routes/product.js"; // Import the product routes
+import productRoutes from "./routes/product.js"; 
 import BuyerRoutes from './routes/buyer.js';
 
 dotenv.config();
 
-// Initialize Express
 const app = express();
 const server = http.createServer(app);
 
@@ -20,16 +19,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB Connection
-const uri = process.env.MONGO_URI || "mongodb+srv://25100159:cyostz0VrFONapW8@cluster0.8pxma.mongodb.net/";
+const uri =  "mongodb+srv://25100159:cyostz0VrFONapW8@cluster0.8pxma.mongodb.net/";
 mongoose.connect(uri)
   .then(() => console.log("Connected to MongoDB"))
   .catch(err => console.error("Error connecting to MongoDB:", err));
 
-// Create Default Admins
 const createAdmins = async () => {
   try {
-    // First Admin
     const existingAdmin1 = await Seller.findOne({ email: "admin@example.com" });
     if (!existingAdmin1) {
       const hashedPassword1 = await bcrypt.hash("admin123", 10);
@@ -47,7 +43,6 @@ const createAdmins = async () => {
       console.log("Admin already exists.");
     }
 
-    // Second Admin
     const existingAdmin2 = await Seller.findOne({ email: "admin2@example.com" });
     if (!existingAdmin2) {
       const hashedPassword2 = await bcrypt.hash("admin456", 10);
@@ -70,18 +65,15 @@ const createAdmins = async () => {
   }
 };
 
-// Ensure admins are created after MongoDB connects
 mongoose.connection.once("open", async () => {
   await createAdmins();
 });
 
-// API Routes
 app.use("/seller", sellerRoutes);
-app.use("/products", productRoutes); // Add this line
+app.use("/products", productRoutes);
 
 app.use('/buyer', BuyerRoutes);
 
-// Socket.io Setup
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:8000",
@@ -93,7 +85,6 @@ io.on("connection", (socket) => {
   console.log("USER CONNECTED:", socket.id);
 });
 
-// Start Server
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

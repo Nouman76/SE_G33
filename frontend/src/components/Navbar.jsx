@@ -24,6 +24,7 @@ const Navbar = () => {
 
   // Save this logic for the profile page
   const handleLogout = () => {
+    localStorage.setItem("isLoggedIn", "false");
     localStorage.removeItem("token");
     window.location.href = "/";
   };
@@ -52,7 +53,7 @@ const Navbar = () => {
               <li>
                 <button
                   className={activePath === "/about" ? "active-btn" : ""}
-                  onClick={() => (window.location.href = "#about")}
+                  onClick={() => (window.location.href = "./About")}
                 >
                   About
                 </button>
@@ -68,9 +69,9 @@ const Navbar = () => {
               <li>
                 <button
                   className={activePath === "/blog" ? "active-btn" : ""}
-                  onClick={() => (window.location.href = "#blog")}
+                  onClick={() => (window.location.href = "./blog")}
                 >
-                  Blog
+                  Blog 
                 </button>
               </li>
               <li>
@@ -86,7 +87,7 @@ const Navbar = () => {
 
           <Col md={2} className="icons-section">
             <div className="nav-icons">
-              <img src={FavouritesIcon} alt="Favourites" />
+              
               <img
                 src={CartIcon}
                 alt="Cart"

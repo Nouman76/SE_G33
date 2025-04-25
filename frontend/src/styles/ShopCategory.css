@@ -1,83 +1,81 @@
-/* Main section styling */
 .shop-category-cat {
-    margin-bottom: 30px;
-}
-.shop-category {
-    background-color: #f8f9fa;
-    padding: 30px 0;
+    margin-bottom: 40px;
 }
 
-/* Category Title */
+.shop-category {
+    background-color: #f8f9fa;
+    padding: 40px 0;
+}
+
 .category-title-text {
     font-family: "Roboto", sans-serif;
     font-weight: 700;
     font-size: 24px;
     color: #001c30;
+    margin-bottom: 15px;
 }
 
-/* View All Button */
 .view-all-container {
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 
-.view-all-btn {
+.view-all-button {
     font-family: "Roboto", sans-serif;
     font-weight: 700;
     font-size: 16px;
     color: #001c30;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-/* Product Display Section */
 .display-products {
     margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
 }
 
 .display-products > .row {
     display: flex;
+    margin: 0;
     justify-content: space-between;
-    flex-wrap: nowrap; /* Prevents wrapping */
 }
 
-/* Product Column: Ensures all items take equal width */
 .display-products .col-md-4 {
-    flex: 0 1 32%; /* 3 items in row with space-between */
-    max-width: 32%;
+    flex: 0 0 31%;
+    max-width: 31%;
+    margin-bottom: 20px;
+    padding: 0;
 }
 
-/* Product Row */
 .product-row {
     display: flex;
     align-items: center;
     background-color: #fff;
-    padding: 15px 0;
+    padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
+    height: 100%;
 }
 
-/* Product Image */
 .product-img-container {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0 5px;
 }
 
 .product-img {
     width: 100%;
     border-radius: 5px;
     height: 110px;
+    object-fit: cover;
 }
 
-/* Product Details */
 .product-details {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
+    padding-left: 5px;
 }
 
 .product-category {
@@ -85,6 +83,7 @@
     font-weight: 600;
     font-size: 14px;
     color: #8e96a4;
+    margin: 0;
 }
 
 .product-name {
@@ -92,53 +91,87 @@
     font-weight: 700;
     font-size: 16px;
     color: #001c30;
+    margin: 0;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    /* -webkit-line-clamp: 2; */
+    -webkit-box-orient: vertical;
 }
 
-/* Shop Now (Clickable) */
-.shop-now {
+.price-buy-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.product-price {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #ee9322;
+    margin-top: 10px;
+}
+
+.buy-button {
     font-family: "Roboto", sans-serif;
     font-weight: 700;
     font-size: 14px;
     color: #f8f9fa;
     cursor: pointer;
-    padding: 10px;
+    padding: 8px 15px;
     margin-top: 10px;
     background-color: #001c30;
-    border-radius: 20px;
-    width: 110px;
+    border-radius: 25px;
+    width: 70px;
+    text-align: center;
+    transition: background-color 0.3s ease;
 }
 
-/* Responsive Design */
+.shop-now:hover {
+    background-color: #3d5a80;
+}
+
 @media (max-width: 768px) {
-    .category-title-text,
+    .category-title,
     .view-all-container {
         text-align: center;
         justify-content: center;
         margin-bottom: 10px;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .view-all-container {
+        justify-content: center;
     }
 
-    .display-products {
-        text-align: center;
-    }
-
-    .shop-now {
-        text-align: center;
-    }
-
-    /* Allow wrapping on smaller screens */
     .display-products > .row {
-        flex-wrap: wrap;
+        justify-content: space-between;
     }
 
     .display-products .col-md-4 {
-        flex: 0 1 48%; /* Two columns per row on smaller screens */
+        flex: 0 0 48%;
         max-width: 48%;
+        margin-bottom: 20px;
     }
 }
 
 @media (max-width: 576px) {
     .display-products .col-md-4 {
-        flex: 0 1 100%; /* One column per row on extra small screens */
+        flex: 0 0 100%;
         max-width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .product-row {
+        padding: 12px;
+    }
+    
+    .product-img {
+        height: 100px;
     }
 }

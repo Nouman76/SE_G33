@@ -49,12 +49,7 @@ const SellerSignup = () => {
     };
 
     emailjs
-      .send(
-        "your_service_id", // Replace with your EmailJS service ID
-        "your_template_id", // Replace with your EmailJS template ID
-        templateParams,
-        "your_user_id" // Replace with your EmailJS user/public key
-      )
+    .send("service_gclxhhj", "template_oc9jg9q", templateParams, "ci0v7i3gwQlwXyWJ5")
       .then(
         (response) => {
           alert("Signup successful! We will contact you soon.");

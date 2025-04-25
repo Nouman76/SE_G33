@@ -49,7 +49,7 @@ const Footer = () => {
               <li><a href="/nearestpetcare">Nearby Hospitals</a></li>
               <li><a href="https://www.tcsexpress.com/track/" target="_blank" rel="noopener noreferrer">Track Order</a></li>
               <li><a href="/profile">Order History</a></li>
-              <li><a href="/adminsignup">Register Store</a></li>
+              <li><a href="/admin">Register Store</a></li>
             </ul>
           </div>
 

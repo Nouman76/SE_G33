@@ -9,6 +9,7 @@ import laptopIcon from '../assets/cat_a.png';
 import tvIcon from '../assets/dog_a.png';
 import cameraIcon from '../assets/pet_med.png';
 import ShopCategory from './ShopCategory';
+import Chatbot from './Chatbot'; 
 
 const Home = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Home = () => {
               src={image1}
               alt="Product 1"
               className="img-fluid1"
-              onClick={() => handleRedirect(1)}
+              
             />
           </Col>
         </Row>
@@ -57,7 +58,9 @@ const Home = () => {
       </Container>
 
       <ShopCategory />
-
+      
+      {/* Add the Chatbot component */}
+      <Chatbot />
     </div>
   );
 };

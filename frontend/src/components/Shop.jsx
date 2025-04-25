@@ -1,21 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "bootstrap-4-react";
-import emailjs from "emailjs-com"; // Import EmailJS
+import emailjs from "emailjs-com";
 import "../styles/Shop.css";
 import successIcon from "../assets/Group.svg";
 import trashIcon from "../assets/trash.svg";
+import { useCart } from "./CartContext";
+import axios from "axios";
 
 const Shop = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Azus Zens 123 Metallic Color i5 Ryzen Generation 10 16” FHD Laptop",
-      price: 100.0,
-      qty: 1,
-    },
-  ]);
-
+  const { cartItems, removeFromCart } = useCart();
   const [step, setStep] = useState(1);
+  const [isMounted, setIsMounted] = useState(false);
+  const { clearCart } = useCart();
   const [customerDetails, setCustomerDetails] = useState({
     firstName: "",
     lastName: "",
@@ -25,16 +21,26 @@ const Shop = () => {
     phone: "",
     email: "",
   });
-
-  const [orderDetails, setOrderDetails] = useState(null);
+  const [orderDetails, setOrderDetails] = useState(null); 
   const deliveryCharge = 10.0;
 
+  // Debug cart items
+  useEffect(() => {
+    setIsMounted(true);
+    console.log("Cart items from context:", cartItems);
+    console.log("Cart items from localStorage:", JSON.parse(localStorage.getItem("cart")));
+    return () => setIsMounted(false);
+  }, [cartItems]);
+
+  if (!isMounted) {
+    return <div>Loading cart...</div>;
+  }
   const calculateTotalPrice = (items) => {
     return items.reduce((acc, item) => acc + item.price * item.qty, 0);
   };
 
   const handleRemove = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    removeFromCart(id);
   };
 
   const handleSubmit = (e) => {
@@ -66,19 +72,66 @@ const Shop = () => {
       });
   };
 
-  const handleConfirmOrder = () => {
-    const total = calculateTotalPrice(cartItems) + deliveryCharge;
-    setOrderDetails({
-      items: cartItems,
-      name: `${customerDetails.firstName} ${customerDetails.lastName}`,
-      address: customerDetails.address,
-      paymentMethod: "Cash on Delivery",
-      total,
-    });
-
-    setStep(3);
+  const handleConfirmOrder = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please login to place an order");
+        return;
+      }
+  
+      // First validate stock availability
+      const stockCheck = await Promise.all(
+        cartItems.map(async (item) => {
+          const response = await axios.get(
+            `http://localhost:8000/products/${item._id || item.id}`
+          );
+          if (response.data.stock < item.qty) {
+            throw new Error(
+              `Not enough stock for ${item.name}. Available: ${response.data.stock}`
+            );
+          }
+          return true;
+        })
+      );
+  
+      // Prepare products data
+      const productsToAdd = cartItems.map(item => ({
+        productId: item._id || item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.qty
+      }));
+  
+      // Add to buyer's purchased products (this will also reduce stock)
+      const response = await axios.post(
+        "http://localhost:8000/buyer/add-purchases",
+        { products: productsToAdd },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+  
+      // Proceed with checkout
+      const total = calculateTotalPrice(cartItems) + deliveryCharge;
+      setOrderDetails({
+        items: cartItems,
+        name: `${customerDetails.firstName} ${customerDetails.lastName}`,
+        address: customerDetails.address,
+        paymentMethod: "Cash on Delivery",
+        total,
+      });
+      setStep(3);
+      clearCart();
+      
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert(error.message || "Failed to complete purchase. Please try again.");
+    }
   };
-
   return (
     <div className="shop-container">
       <Container>
@@ -102,38 +155,30 @@ const Shop = () => {
 
         {/* 🛒 Shopping Cart Section */}
         {step === 1 && (
-            <div className="cart-step">
+          <div className="cart-step">
             <Row>
               <Col md={8}>
                 <div className="products-in-cart">
                   {/* Cart Header */}
                   <Row className="cart-header">
-                    <Col md={6} className="cart-header-item">Product Details</Col>
-                    <Col md={2} className="cart-header-item">Price</Col>
-                    <Col md={1} className="cart-header-item">QTY</Col>
-                    <Col md={2} className="cart-header-item">Subtotal</Col>
-                    <Col md={1} className="cart-header-item text-center"></Col>
+                    <Col md={6}>Product Details</Col>
+                    <Col md={2}>Price</Col>
+                    <Col md={1}>QTY</Col>
+                    <Col md={2}>Subtotal</Col>
+                    <Col md={1} className="text-center"></Col>
                   </Row>
 
                   {/* Cart Items */}
                   {cartItems.map((item) => (
-                    <Row key={item.id} className="cart-item">
-                      {/* Product Details */}
+                    <Row key={item.id || item._id} className="cart-item">
                       <Col md={6} className="cart-item-details">
                         <div className="cart-item-name">{item.name}</div>
                       </Col>
-
-                      {/* Price */}
-                      <Col md={2} className="cart-item-price">${item.price.toFixed(2)}</Col>
-
-                      {/* Quantity */}
-                      <Col md={1} className="cart-item-qty">{item.qty}</Col>
-
-                      {/* Subtotal */}
-                      <Col md={2} className="cart-item-subtotal">${(item.price * item.qty).toFixed(2)}</Col>
-
-                      {/* Remove Button */}
-                      <Col md={1} className="cart-item-remove text-center" onClick={() => handleRemove(item.id)}>
+                      <Col md={2}>Rs.{item.price.toFixed(2)}</Col>
+                      <Col md={1}>{item.qty}</Col>
+                      <Col md={2}>Rs.{(item.price * item.qty).toFixed(2)}</Col>
+                      <Col md={1} className="text-center" 
+                        onClick={() => handleRemove(item.id || item._id)}>
                         <img src={trashIcon} alt="Remove" className="trash-icon" />
                       </Col>
                     </Row>
@@ -150,16 +195,16 @@ const Shop = () => {
                   <div className="divider"></div>
                   <div className="summary-section">
                     <div className="summary-title">Subtotal:</div>
-                    <span className="summary-value">${calculateTotalPrice(cartItems).toFixed(2)}</span>
+                    <span className="summary-value">Rs.{calculateTotalPrice(cartItems).toFixed(2)}</span>
                   </div>
                   <div className="summary-section">
                     <div className="summary-title">Delivery Charge:</div>
-                    <span className="summary-value">${deliveryCharge.toFixed(2)}</span>
+                    <span className="summary-value">Rs.{deliveryCharge.toFixed(2)}</span>
                   </div>
                   <div className="divider"></div>
                   <div className="summary-section total">
                     <div className="summary-title">Total:</div>
-                    <span className="summary-value">${(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
+                    <span className="summary-value">Rs.{(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
                   </div>
                   <div className="checkout-btn" onClick={() => setStep(2)}>Checkout</div>
                 </div>
@@ -290,16 +335,16 @@ const Shop = () => {
                   <div className="divider"></div>
                   <div className="summary-section">
                     <div className="summary-title">Subtotal:</div>
-                    <span className="summary-value">${calculateTotalPrice(cartItems).toFixed(2)}</span>
+                    <span className="summary-value">Rs.{calculateTotalPrice(cartItems).toFixed(2)}</span>
                   </div>
                   <div className="summary-section">
                     <div className="summary-title">Delivery Charge:</div>
-                    <span className="summary-value">${deliveryCharge.toFixed(2)}</span>
+                    <span className="summary-value">Rs.{deliveryCharge.toFixed(2)}</span>
                   </div>
                   <div className="divider"></div>
                   <div className="summary-section total">
                     <div className="summary-title">Total:</div>
-                    <span className="summary-value">${(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
+                    <span className="summary-value">Rs.{(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
                   </div>
                   <div className="payment-method">
   <div className="payment-title">Select Payment Method</div>
@@ -316,7 +361,7 @@ const Shop = () => {
   </div>
 </div>
 
-                  <div className="checkout-btn" onClick={() => setStep(3)}>Place Order</div>
+<div className="checkout-btn" onClick={handleConfirmOrder}>Place Order</div>
                 </div>
            </Col>
          </Row>
@@ -349,20 +394,20 @@ const Shop = () => {
               {/* Subtotal */}
               <div className="order-item">
                 <div className="item-label">Subtotal:</div>
-                <div className="item-value">${calculateTotalPrice(cartItems).toFixed(2)}</div>
+                <div className="item-value">Rs.{calculateTotalPrice(cartItems).toFixed(2)}</div>
               </div>
 
               {/* Delivery Charge */}
               <div className="order-item">
                 <div className="item-label">Delivery Charge:</div>
-                <div className="item-value">${deliveryCharge.toFixed(2)}</div>
+                <div className="item-value">Rs.{deliveryCharge.toFixed(2)}</div>
               </div>
 
               {/* Total */}
               <div className="order-item">
                 <div className="item-label">Total:</div>
                 <div className="total-price">
-                  ${(+calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}
+                Rs.{(+calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}
                 </div>
               </div>
 

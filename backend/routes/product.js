@@ -5,18 +5,18 @@ import {
   getProductById,
   updateProduct,
   deleteProduct,
-  getProductsByCategory 
+  getProductsByCategory,
+  addReview
 } from "../controllers/product.js";
 
 const router = express.Router();
 
-router.post("/", createProduct); // Create a product
-router.get("/", getProducts); // Fetch all products
-router.get("/:id", getProductById); // Fetch a single product by ID
-router.put("/:id", updateProduct); // Update a product by ID
-router.delete("/:id", deleteProduct); // Delete a product by ID
-router.get("/category/:category", getProductsByCategory); // Get top 3 products by category
- // Get top 3 products by category
-
+router.post("/", createProduct);
+router.get("/", getProducts); 
+router.get("/:id", getProductById); 
+router.put("/:id", updateProduct);
+router.delete("/:id", deleteProduct); 
+router.get("/category/:category", getProductsByCategory); 
+router.post("/:productId/review", addReview); 
 
 export default router;
