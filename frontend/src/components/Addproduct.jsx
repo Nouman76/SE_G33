@@ -10,18 +10,17 @@ const AddProduct = () => {
     description: "",
     price: "",
     stock: "",
-    category: "Cat Food", // Default category
-    seller: "", // This will be auto-filled
+    category: "Cat Food", 
+    seller: "", 
   });
 
   const [sellerId, setSellerId] = useState("");
 
-   // Fetch seller ID from the token
     useEffect(() => {
       const token = localStorage.getItem("token");
       if (token) {
-        const decoded = jwtDecode(token); // ✅ Decode the token
-        setSellerId(decoded.id); // Extract seller ID
+        const decoded = jwtDecode(token); 
+        setSellerId(decoded.id); 
       }
     }, []);
   const handleChange = (e) => {
@@ -39,7 +38,7 @@ const AddProduct = () => {
           price: "",
           stock: "",
           category: "",
-          seller: "", // Reset but will auto-fetch
+          seller: "", 
         });
       } catch (error) {
         alert("Error adding product!");
