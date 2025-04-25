@@ -1,0 +1,118 @@
+.custom-navbar {
+  font-family: "Roboto", sans-serif;
+  background-color: #001c30;
+  color: #ffffff;
+}
+.navu {
+  justify-content: center;
+  align-content: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+.menu-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.custom-navbar span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #001c30;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  margin: 0px;
+}
+
+.nav-links li button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 50px;
+  padding: 5px 15px;
+}
+
+.nav-links li button:hover {
+  background-color: #f4ce14;
+  color: #001c30;
+}
+
+/* Active button remains highlighted */
+.active-btn {
+  background-color: #f4ce14;
+  color: #001c30;
+}
+
+.nav-icons {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.nav-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.nav-toggle-btn {
+  color: #001c30;
+  border: none;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.nav-links-collapsed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-links-collapsed li button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+}
+
+.nav-links-collapsed li button:hover {
+  color: #f4ce14;
+}
+
+.all-category-btn {
+  background-color: #f4ce14;
+  height: 54px;
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.all-category-btn .icon-block {
+  margin-right: 10px;
+}
+
+.icons-section {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-icons {
+  justify-content: space-between;
+  align-content: center;
+  flex-wrap: wrap;
+}

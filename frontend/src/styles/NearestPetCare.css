@@ -1,0 +1,130 @@
+.nearest-pet-care-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.pet-care-heading {
+  font-size: 2.2rem;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.map-container {
+  height: 600px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 1.5rem;
+  border: 1px solid #e0e0e0;
+}
+
+.marker-popup {
+  min-width: 250px;
+  font-size: 14px;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.popup-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.pet-icon {
+  font-size: 1.4rem;
+}
+
+.popup-content {
+  padding-top: 5px;
+}
+
+.facility-type {
+  color: #3498db;
+  font-weight: 600;
+  margin: 5px 0;
+  font-size: 0.95rem;
+}
+
+.address, .contact-info, .website {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #34495e;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.whatsapp-link {
+  color: #25D366;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3px;
+}
+
+.whatsapp-link:hover {
+  text-decoration: underline;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.results-info {
+  text-align: center;
+  font-size: 1rem;
+  color: #7f8c8d;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.refresh-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.refresh-btn:hover {
+  background: #2980b9;
+}
+
+.loading-message, .error-message {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #7f8c8d;
+}
+
+.error-message {
+  color: #e74c3c;
+}
