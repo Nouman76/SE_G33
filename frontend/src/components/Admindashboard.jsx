@@ -7,12 +7,10 @@ const AdminDashboard = () => {
   const [selectedPage, setSelectedPage] = useState(null);
   const navigate = useNavigate();
   const handleLogout = () => {
-    // Clear all seller-related items from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("seller");
     localStorage.removeItem("sellerId");
     
-    // Redirect to admin login page
     navigate("/admin");
   };
   return (
