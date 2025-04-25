@@ -11,10 +11,9 @@ const DeleteProduct = () => {
       alert("Product deleted successfully!");
       setProductId("");
     } catch (error) {
-      alert("Error deleting product!");
+      alert("Error deleting product:(");
     }
   };
-
   return (
     <div className="delete-product-container">
       <h2>Delete Product</h2>
