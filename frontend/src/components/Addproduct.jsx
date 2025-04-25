@@ -13,7 +13,7 @@ const AddProduct = () => {
     category: "Cat Food", 
     seller: "", 
   });
-
+  
   const [sellerId, setSellerId] = useState("");
 
     useEffect(() => {
