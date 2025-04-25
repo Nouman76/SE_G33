@@ -45,7 +45,7 @@ const Navbar = () => {
               <li>
                 <button
                   className={activePath === "/" ? "active-btn" : ""}
-                  onClick={() => (window.location.href = "./")}
+                  onClick={() => (window.location.href = "../")}
                 >
                   Home
                 </button>
@@ -53,7 +53,7 @@ const Navbar = () => {
               <li>
                 <button
                   className={activePath === "/about" ? "active-btn" : ""}
-                  onClick={() => (window.location.href = "#about")}
+                  onClick={() => (window.location.href = "../About")}
                 >
                   About
                 </button>
@@ -61,7 +61,7 @@ const Navbar = () => {
               <li>
                 <button
                   className={activePath === "/shop" ? "active-btn" : ""}
-                  onClick={() => (window.location.href = "./shoppage")}
+                  onClick={() => (window.location.href = "../shoppage")}
                 >
                   Shop
                 </button>
@@ -69,15 +69,15 @@ const Navbar = () => {
               <li>
                 <button
                   className={activePath === "/blog" ? "active-btn" : ""}
-                  onClick={() => (window.location.href = "#blog")}
+                  onClick={() => (window.location.href = "../blog")}
                 >
-                  Blog
+                  Blog 
                 </button>
               </li>
               <li>
                 <button
                   className={activePath === "/contact" ? "active-btn" : ""}
-                  onClick={() => (window.location.href = "./contact")}
+                  onClick={() => (window.location.href = "../contact")}
                 >
                   Contact
                 </button>
@@ -87,7 +87,7 @@ const Navbar = () => {
 
           <Col md={2} className="icons-section">
             <div className="nav-icons">
-              <img src={FavouritesIcon} alt="Favourites" />
+              
               <img
                 src={CartIcon}
                 alt="Cart"
@@ -111,7 +111,7 @@ const Navbar = () => {
               <ul className="nav-links-collapsed list-unstyled text-center mt-3">
                 <li>
                   <button
-                    className={activePath === "/" ? "active-btn" : ""}
+                    className={activePath === "../" ? "active-btn" : ""}
                     onClick={() => (window.location.href = "#home")}
                   >
                     Home

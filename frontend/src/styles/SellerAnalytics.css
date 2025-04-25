@@ -1,0 +1,28 @@
+.analytics-container {
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .summary-cards {
+    margin-bottom: 30px;
+  }
+  
+  .summary-cards .card {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .summary-cards h5 {
+    color: #666;
+  }
+  
+  .summary-cards h3 {
+    font-size: 2.5rem;
+    color: #333;
+  }
+  
+  .table {
+    margin-top: 20px;
+  }

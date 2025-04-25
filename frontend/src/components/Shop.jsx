@@ -73,16 +73,27 @@ const Shop = () => {
   };
 
   const handleConfirmOrder = async () => {
-    console.log("handleConfirmOrder called");
-    
     try {
       const token = localStorage.getItem("token");
-      console.log("Token from localStorage:", token);
-      
       if (!token) {
         alert("Please login to place an order");
         return;
       }
+  
+      // First validate stock availability
+      const stockCheck = await Promise.all(
+        cartItems.map(async (item) => {
+          const response = await axios.get(
+            `http://localhost:8000/products/${item._id || item.id}`
+          );
+          if (response.data.stock < item.qty) {
+            throw new Error(
+              `Not enough stock for ${item.name}. Available: ${response.data.stock}`
+            );
+          }
+          return true;
+        })
+      );
   
       // Prepare products data
       const productsToAdd = cartItems.map(item => ({
@@ -92,9 +103,7 @@ const Shop = () => {
         quantity: item.qty
       }));
   
-      console.log("Prepared products to add:", productsToAdd);
-  
-      // Add to buyer's purchased products
+      // Add to buyer's purchased products (this will also reduce stock)
       const response = await axios.post(
         "http://localhost:8000/buyer/add-purchases",
         { products: productsToAdd },
@@ -106,8 +115,6 @@ const Shop = () => {
         }
       );
   
-      console.log("Purchase API response:", response.data);
-  
       // Proceed with checkout
       const total = calculateTotalPrice(cartItems) + deliveryCharge;
       setOrderDetails({
@@ -117,12 +124,12 @@ const Shop = () => {
         paymentMethod: "Cash on Delivery",
         total,
       });
-      clearCart();
       setStep(3);
+      clearCart();
+      
     } catch (error) {
       console.error("Checkout error:", error);
-      console.error("Error response:", error.response?.data);
-      alert("Failed to complete purchase. Please try again.");
+      alert(error.message || "Failed to complete purchase. Please try again.");
     }
   };
   return (
@@ -167,9 +174,9 @@ const Shop = () => {
                       <Col md={6} className="cart-item-details">
                         <div className="cart-item-name">{item.name}</div>
                       </Col>
-                      <Col md={2}>${item.price.toFixed(2)}</Col>
+                      <Col md={2}>Rs.{item.price.toFixed(2)}</Col>
                       <Col md={1}>{item.qty}</Col>
-                      <Col md={2}>${(item.price * item.qty).toFixed(2)}</Col>
+                      <Col md={2}>Rs.{(item.price * item.qty).toFixed(2)}</Col>
                       <Col md={1} className="text-center" 
                         onClick={() => handleRemove(item.id || item._id)}>
                         <img src={trashIcon} alt="Remove" className="trash-icon" />
@@ -188,16 +195,16 @@ const Shop = () => {
                   <div className="divider"></div>
                   <div className="summary-section">
                     <div className="summary-title">Subtotal:</div>
-                    <span className="summary-value">${calculateTotalPrice(cartItems).toFixed(2)}</span>
+                    <span className="summary-value">Rs.{calculateTotalPrice(cartItems).toFixed(2)}</span>
                   </div>
                   <div className="summary-section">
                     <div className="summary-title">Delivery Charge:</div>
-                    <span className="summary-value">${deliveryCharge.toFixed(2)}</span>
+                    <span className="summary-value">Rs.{deliveryCharge.toFixed(2)}</span>
                   </div>
                   <div className="divider"></div>
                   <div className="summary-section total">
                     <div className="summary-title">Total:</div>
-                    <span className="summary-value">${(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
+                    <span className="summary-value">Rs.{(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
                   </div>
                   <div className="checkout-btn" onClick={() => setStep(2)}>Checkout</div>
                 </div>
@@ -328,16 +335,16 @@ const Shop = () => {
                   <div className="divider"></div>
                   <div className="summary-section">
                     <div className="summary-title">Subtotal:</div>
-                    <span className="summary-value">${calculateTotalPrice(cartItems).toFixed(2)}</span>
+                    <span className="summary-value">Rs.{calculateTotalPrice(cartItems).toFixed(2)}</span>
                   </div>
                   <div className="summary-section">
                     <div className="summary-title">Delivery Charge:</div>
-                    <span className="summary-value">${deliveryCharge.toFixed(2)}</span>
+                    <span className="summary-value">Rs.{deliveryCharge.toFixed(2)}</span>
                   </div>
                   <div className="divider"></div>
                   <div className="summary-section total">
                     <div className="summary-title">Total:</div>
-                    <span className="summary-value">${(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
+                    <span className="summary-value">Rs.{(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
                   </div>
                   <div className="payment-method">
   <div className="payment-title">Select Payment Method</div>
@@ -387,20 +394,20 @@ const Shop = () => {
               {/* Subtotal */}
               <div className="order-item">
                 <div className="item-label">Subtotal:</div>
-                <div className="item-value">${calculateTotalPrice(cartItems).toFixed(2)}</div>
+                <div className="item-value">Rs.{calculateTotalPrice(cartItems).toFixed(2)}</div>
               </div>
 
               {/* Delivery Charge */}
               <div className="order-item">
                 <div className="item-label">Delivery Charge:</div>
-                <div className="item-value">${deliveryCharge.toFixed(2)}</div>
+                <div className="item-value">Rs.{deliveryCharge.toFixed(2)}</div>
               </div>
 
               {/* Total */}
               <div className="order-item">
                 <div className="item-label">Total:</div>
                 <div className="total-price">
-                  ${(+calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}
+                Rs.{(+calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}
                 </div>
               </div>
 

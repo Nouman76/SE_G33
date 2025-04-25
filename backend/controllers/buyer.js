@@ -1,8 +1,11 @@
 import Buyer from "../models/buyer.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+// import Product from "../models/product.js";
 // Add this to your buyer controller
+import Product from "../models/product.js"; // Make sure to import Product model
+// If you created the separate function in product.js
+import { reduceProductStock } from "./product.js";
 export const addPurchasedProducts = async (req, res) => {
   console.log("\n--- ADD PURCHASES START ---");
   console.log("Request body:", JSON.stringify(req.body, null, 2));
@@ -29,7 +32,56 @@ export const addPurchasedProducts = async (req, res) => {
     }
 
     console.log("Adding products:", req.body.products);
-    buyer.purchasedProducts.push(...req.body.products);
+    
+    // 1. First reduce stock and record purchases for all products
+    const stockUpdates = req.body.products.map(async (product) => {
+      try {
+        console.log(`Processing product ${product.productId}, quantity: ${product.quantity}`);
+        
+        // Update stock and record purchase in one atomic operation
+        const updatedProduct = await Product.findByIdAndUpdate(
+          product.productId,
+          { 
+            $inc: { stock: -product.quantity },
+            $push: { 
+              purchases: {
+                buyer: decoded.id,
+                quantity: product.quantity,
+                purchasedAt: new Date()
+              }
+            }
+          },
+          { new: true }
+        );
+        
+        if (!updatedProduct) {
+          throw new Error(`Product ${product.productId} not found`);
+        }
+        
+        if (updatedProduct.stock < 0) {
+          // Rollback the stock change if insufficient
+          await Product.findByIdAndUpdate(
+            product.productId,
+            { $inc: { stock: product.quantity } }
+          );
+          throw new Error(`Insufficient stock for ${updatedProduct.name}`);
+        }
+        
+        console.log(`Stock updated for ${updatedProduct.name}. New stock: ${updatedProduct.stock}`);
+        return updatedProduct;
+      } catch (error) {
+        console.error(`Processing failed for product ${product.productId}:`, error);
+        throw error;
+      }
+    });
+
+    await Promise.all(stockUpdates);
+    
+    // 2. Then add to buyer's purchased products
+    buyer.purchasedProducts.push(...req.body.products.map(p => ({
+      ...p,
+      purchasedAt: new Date()
+    })));
     
     const savedBuyer = await buyer.save();
     console.log("After save - purchasedProducts count:", savedBuyer.purchasedProducts.length);
@@ -43,12 +95,11 @@ export const addPurchasedProducts = async (req, res) => {
     console.error("ADD PURCHASES ERROR:", error);
     res.status(500).json({ 
       success: false,
-      message: "Error adding purchases",
+      message: error.message || "Error adding purchases",
       error: error.message 
     });
   }  
 };
-
 export const updateBuyerProfile = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ message: "Unauthorized" });
@@ -149,23 +200,53 @@ export const getBuyerProfile = async (req, res) => {
       return res.status(404).json({ message: "Buyer not found" });
     }
 
+    // Group purchased products by productId and sum quantities
+    const productMap = new Map();
+    
+    buyer.purchasedProducts.forEach(purchase => {
+      const productId = purchase.productId.toString();
+      
+      if (productMap.has(productId)) {
+        // Existing product - update quantity
+        const existing = productMap.get(productId);
+        existing.quantity += purchase.quantity;
+        // Keep the most recent purchase date
+        if (new Date(purchase.purchasedAt) > new Date(existing.purchasedAt)) {
+          existing.purchasedAt = purchase.purchasedAt;
+        }
+      } else {
+        // New product - add to map
+        productMap.set(productId, {
+          ...purchase,
+          purchaseId: purchase._id // Keep the purchase reference if needed
+        });
+      }
+    });
+
+    // Convert map to array of grouped products
+    const groupedOrders = Array.from(productMap.values());
+
     const responseData = {
+      id: decodedToken.id, // Add the buyer ID here
       name: buyer.name,
       email: buyer.email,
       address: buyer.address,
       phoneNumber: buyer.phoneNumber,
-      orders: buyer.purchasedProducts || []
+      orders: groupedOrders
     };
 
-    console.log("Returning profile data");
+    console.log("Grouped orders count:", groupedOrders.length);
     console.log("--- GET PROFILE SUCCESS ---\n");
     res.status(200).json(responseData);
   } catch (error) {
     console.error("GET PROFILE ERROR:", error);
-    res.status(400).json({ message: "Error fetching buyer profile", error: error.message });
+    res.status(400).json({ 
+      message: "Error fetching buyer profile", 
+      error: error.message 
+    });
   }
 };
-  
+
 
 // Change buyer password
 export const changePassword = async (req, res) => {

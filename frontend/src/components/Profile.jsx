@@ -22,6 +22,14 @@ const Profile = () => {
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false);
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
 
+  const [review, setReview] = useState({
+    productId: "", // Initially empty
+    rating: 1,
+    comment: "",
+  });
+
+  const [showReviewForm, setShowReviewForm] = useState(false); // Manage review form visibility
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,24 +38,32 @@ const Profile = () => {
       try {
         const token = localStorage.getItem("token");
         console.log("Profile token:", token);
-        
+
         const response = await axios.get("http://localhost:8000/buyer/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        
+
         console.log("Profile API response:", response.data);
-        setUser(response.data);
-        setFormValues(response.data);
+
+        // Sort orders by quantity in descending order if orders exist
+        const userData = response.data;
+        if (userData.orders && userData.orders.length > 0) {
+          userData.orders = userData.orders.sort((a, b) => b.quantity - a.quantity);
+        }
+        console.log("User _id:", userData.id);
+        setUser(userData);
+        setFormValues(userData);
       } catch (error) {
         console.error("Error fetching user data:", error);
         console.error("Error response:", error.response?.data);
       }
     };
-  
+
     fetchUserData();
   }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.setItem("isLoggedIn", "false");
@@ -114,6 +130,52 @@ const Profile = () => {
     } catch (error) {
       console.error("Error updating profile:", error);
     }
+  };
+
+  const handleReviewChange = (e) => {
+    const { name, value } = e.target;
+    setReview({ ...review, [name]: value });
+  };
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!review.productId) {
+        alert("Product ID is missing.");
+        return;
+      }
+      console.log("buyerId:", user.name);
+      console.log("Review submitted for Product ID:", review.productId);
+
+      const response = await axios.post(
+        `http://localhost:8000/products/${review.productId}/review`,
+        {
+          buyerId: user.name,
+          rating: review.rating,
+          comment: review.comment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data.message === "Review added successfully!") {
+        alert("Review added successfully!");
+        setReview({ productId: "", rating: 1, comment: "" }); // Clear review form
+        setShowReviewForm(false); // Close the review form
+      }
+    } catch (error) {
+      console.error("Error adding review:", error);
+      alert("Error adding review.");
+    }
+  };
+
+  const handleProductReview = (productId) => {
+    setReview({ ...review, productId }); // Set productId in the review state
+    setShowReviewForm(true); // Show the review form
   };
 
   return (
@@ -204,28 +266,74 @@ const Profile = () => {
             <div className="success-message mt-2">Profile updated successfully!</div>
           )}
 
-// In your Profile.jsx component, update the orders section:
-<Row className="mt-4">
-  <Col>
-    <div className="contact-subtitle">My Orders</div>
-    <div className="yellow-underline"></div>
-    {user.orders && user.orders.length > 0 ? (
-      <div className="orders-list">
-        {user.orders.map((order, index) => (
-          <div key={index} className="order-item">
-            <div><strong>Product:</strong> {order.name}</div>
-            <div><strong>Price:</strong> ${order.price.toFixed(2)}</div>
-            <div><strong>Quantity:</strong> {order.quantity}</div>
-            <div><strong>Date:</strong> {new Date(order.purchasedAt).toLocaleDateString()}</div>
-            <div className="divider"></div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <div>No orders yet</div>
-    )}
-  </Col>
-</Row>
+          <Row className="mt-4">
+            <Col>
+              <div className="contact-subtitle">My Orders</div>
+              <div className="yellow-underline"></div>
+              {user.orders && user.orders.length > 0 ? (
+                <div className="orders-list">
+                  {user.orders.map((order, index) => (
+                    <div key={order._id || index} className="order-card">
+                      <div className="order-header">
+                        <span className="order-date">Ordered on {new Date(order.purchasedAt).toLocaleDateString()}</span>
+                        <span className="order-quantity">Quantity: {order.quantity}</span>
+                      </div>
+                      <div className="order-details">
+                        <div className="product-name">{order.name}</div>
+                        <div className="order-price">Rs.{order.price.toFixed(2)}</div>
+                      </div>
+                      <div className="order-total">
+                        <span>Total: Rs.{(order.price * order.quantity).toFixed(2)}</span>
+                      </div>
+                      <div className="review-form">
+                        <button
+                          className="custom-btn"
+                          onClick={() => handleProductReview(order.productId)} // Set the productId for the review form
+                        >
+                          Leave a Review
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="no-orders">No orders yet</div>
+              )}
+            </Col>
+          </Row>
+
+          {/* Review Form */}
+          {showReviewForm && (
+            <Row className="mt-4">
+              <Col>
+                <form onSubmit={handleReviewSubmit}>
+                  <div>
+                    <label>Rating: </label>
+                    <select
+                      name="rating"
+                      value={review.rating}
+                      onChange={handleReviewChange}
+                    >
+                      {[1, 2, 3, 4, 5].map((rating) => (
+                        <option key={rating} value={rating}>
+                          {rating}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label>Comment: </label>
+                    <textarea
+                      name="comment"
+                      value={review.comment}
+                      onChange={handleReviewChange}
+                    />
+                  </div>
+                  <button type="submit" className="custom-btn">Submit Review</button>
+                </form>
+              </Col>
+            </Row>
+          )}
 
           <Row className="mt-4">
             <Col>

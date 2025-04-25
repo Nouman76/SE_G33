@@ -35,7 +35,31 @@ export const getProductsByCategory = async (req, res) => {
     res.status(500).json({ message: "Error fetching products by category", error: error.message });
   }
 };
+// Add Review to Product
+export const addReview = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { buyerId, rating, comment } = req.body;
 
+    // Validate input
+    if (!buyerId || !rating || !comment) {
+      return res.status(400).json({ message: "Buyer ID, rating, and comment are required!" });
+    }
+
+    // Find the product and add the review
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found!" });
+    }
+
+    product.reviews.push({ buyer: buyerId, rating, comment });
+    await product.save();
+
+    res.status(201).json({ message: "Review added successfully!", product });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding review!", error: error.message });
+  }
+};
 
 
 // View All Products
@@ -114,5 +138,23 @@ export const deleteProduct = async (req, res) => {
     res.status(200).json({ message: "Product deleted successfully!" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting product!", error: error.message });
+  }
+};
+export const reduceProductStock = async (productId, quantity) => {
+  try {
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw new Error('Product not found');
+    }
+    
+    if (product.stock < quantity) {
+      throw new Error('Insufficient stock');
+    }
+    
+    product.stock -= quantity;
+    await product.save();
+    return product;
+  } catch (error) {
+    throw error;
   }
 };
