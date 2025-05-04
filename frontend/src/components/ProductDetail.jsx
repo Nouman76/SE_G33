@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/ProductDetail.css";
 import img from "../assets/product.png";
@@ -7,7 +7,6 @@ import { useCart } from "../components/CartContext";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { addToCart } = useCart();
 
   const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
@@ -17,12 +16,6 @@ const ProductDetail = () => {
   const [loginError, setLoginError] = useState("");
 
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      setLoginError("Please login to add and purchase products");
-    }
-  }, [isLoggedIn]);
 
   useEffect(() => {
     axios
@@ -35,24 +28,28 @@ const ProductDetail = () => {
   }, [id, apiBaseUrl]);
 
   const handleAddToCart = () => {
+    setLoginError("");
+
     if (!isLoggedIn) {
-      navigate("../login");
+      setLoginError("Please login to add and purchase products");
       return;
     }
+
     addToCart(product);
-    navigate("../shoppage");
+    window.location.href = "../shoppage";
   };
 
   if (!product) return <div>Loading...</div>;
 
   return (
+    <div className="product-detail-page">
+      {loginError && (
+        <div className="error-banner">
+          {loginError}
+        </div>
+      )}
+
       <div className="product-detail-container">
-         <div className="product-detail-page">
-          {loginError && (
-            <div className="error-banner">
-              {loginError}
-            </div>
-          )}
         <div className="product-detail-content">
           <div className="product-detail-image">
             <img src={product.image || img} alt={product.name} />
@@ -65,7 +62,6 @@ const ProductDetail = () => {
             <button
               className="add-to-cart-btn"
               onClick={handleAddToCart}
-              disabled={!isLoggedIn}
             >
               Add to Cart
             </button>
