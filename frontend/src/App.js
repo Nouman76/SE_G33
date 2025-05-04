@@ -25,79 +25,69 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import BlogPage from "./components/Blogpage";
 import AboutUs from "./components/Aboutus"; 
 
-
-
-
 function AppContent() {
   const location = useLocation();
-  
   const isAdminPage = location.pathname.startsWith("/admin") || 
-  location.pathname.startsWith("/seller/analytics")||
-  location.pathname.startsWith("/sellersignup") ;
+    location.pathname.startsWith("/seller/analytics") ||
+    location.pathname.startsWith("/sellersignup");
 
   return (
-    <div className="App">
+    <>
       {!isAdminPage && <Header />}
-      <CartProvider> 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/shopcategory" element={<ShopCategory />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/nearestpetcare" element={<NearestPetCare />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/shoppage" element={<ShopPage />} />
-          <Route path="/shop-category/:categoryName" element={<ShopPage />} />
-               <Route path="/admin" element={<Admin />} />
-          
-          <Route path='/seller/analytics' element={
-            <ProtectedRoute>
-              <SellerAnalytics />
-            </ProtectedRoute>
-          } />
-          <Route path="/sellersignup" element={
-            
-              <SellerSignup />
-            
-          } />
-          <Route path="/admindashboard" element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/add-product" element={
-            <ProtectedRoute>
-              <AddProduct />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/delete-product" element={
-            <ProtectedRoute>
-              <DeleteProduct />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/view-products" element={
-            <ProtectedRoute>
-              <ViewProducts />
-            </ProtectedRoute>
-          } />
-        </Routes>
-      </CartProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/shopcategory" element={<ShopCategory />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/nearestpetcare" element={<NearestPetCare />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/shoppage" element={<ShopPage />} />
+        <Route path="/shop-category/:categoryName" element={<ShopPage />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path='/seller/analytics' element={
+          <ProtectedRoute>
+            <SellerAnalytics />
+          </ProtectedRoute>
+        } />
+        <Route path="/sellersignup" element={<SellerSignup />} />
+        <Route path="/admindashboard" element={
+          <ProtectedRoute>
+            <AdminDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/add-product" element={
+          <ProtectedRoute>
+            <AddProduct />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/delete-product" element={
+          <ProtectedRoute>
+            <DeleteProduct />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/view-products" element={
+          <ProtectedRoute>
+            <ViewProducts />
+          </ProtectedRoute>
+        } />
+      </Routes>
       {!isAdminPage && <Footer />}
-    </div>
+    </>
   );
-
 }
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <CartProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </CartProvider>
   );
 }
 

@@ -54,7 +54,7 @@
 .add-to-cart-btn {
   margin-top: 20px;
   padding: 12px 24px;
-  background-color: #ff6f61;
+  background-color: #f4ce14;
   color: white;
   border: none;
   border-radius: 8px;
@@ -62,10 +62,11 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   width: fit-content;
+  font-weight: 700;
 }
 
 .add-to-cart-btn:hover {
-  background-color: #ff3b2e;
+  background-color: #ebc91f;
 }
 
 /* Reviews Section */

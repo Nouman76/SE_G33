@@ -14,21 +14,22 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
-useEffect(() => {
-  const checkLoginStatus = () => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-    if (!isLoggedIn) {
-      setCartItems([]);
-      localStorage.removeItem("cart");
-    }
-  };
 
-  
-  checkLoginStatus();
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+      if (!isLoggedIn) {
+        setCartItems([]);
+        localStorage.removeItem("cart");
+      }
+    };
 
-  window.addEventListener('storage', checkLoginStatus);
-  return () => window.removeEventListener('storage', checkLoginStatus);
-}, []);
+    checkLoginStatus();
+
+    window.addEventListener("storage", checkLoginStatus);
+    return () => window.removeEventListener("storage", checkLoginStatus);
+  }, []);
+
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -41,16 +42,17 @@ useEffect(() => {
     }
     setIsInitialized(true);
   }, []);
-  const resetCart = () => {
-    setCartItems([]);
-    localStorage.removeItem("cart"); 
-  };
-  
+
   useEffect(() => {
     if (isInitialized) {
       localStorage.setItem("cart", JSON.stringify(cartItems));
     }
   }, [cartItems, isInitialized]);
+
+  const resetCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("cart");
+  };
 
   const addToCart = (product) => {
     if (loading) return;
@@ -58,36 +60,42 @@ useEffect(() => {
 
     setCartItems((prev) => {
       const productId = product._id || product.id;
-      const existingProduct = prev.find((item) => 
-        (item._id === productId) || (item.id === productId)
+      const existingProduct = prev.find(
+        (item) => item._id === productId || item.id === productId
       );
 
-      if (existingProduct) {
-        return prev.map((item) =>
-          (item._id === productId || item.id === productId)
-            ? { ...item, qty: (item.qty || 0) + 1 }
-            : item
-        );
-      } else {
-        return [...prev, { 
-          ...product, 
-          id: productId,
-          _id: productId,
-          qty: 1 
-        }];
-      }
+      const updatedCart = existingProduct
+        ? prev.map((item) =>
+            item._id === productId || item.id === productId
+              ? { ...item, qty: (item.qty || 0) + 1 }
+              : item
+          )
+        : [
+            ...prev,
+            {
+              ...product,
+              id: productId,
+              _id: productId,
+              qty: 1,
+            },
+          ];
+
+      return updatedCart;
     });
 
     setLoading(false);
   };
 
   const removeFromCart = (id) => {
-    setCartItems((prev) => 
+    setCartItems((prev) =>
       prev.filter((item) => item._id !== id && item.id !== id)
     );
   };
 
-  const clearCart = () => setCartItems([]);
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("cart");
+  };
 
   const getTotalItems = () => {
     return cartItems.reduce((total, item) => total + item.qty, 0);
@@ -96,6 +104,8 @@ useEffect(() => {
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => total + item.price * item.qty, 0);
   };
+
+  const hasItemsInCart = cartItems.length > 0;
 
   return (
     <CartContext.Provider
@@ -108,6 +118,7 @@ useEffect(() => {
         getTotalPrice,
         loading,
         resetCart,
+        hasItemsInCart,
       }}
     >
       {children}

@@ -24,7 +24,7 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product);
-      window.location.href= "../shop";
+      window.location.href= "../shoppage";
     }
      
   };

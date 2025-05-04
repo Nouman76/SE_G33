@@ -10,6 +10,17 @@
   padding: 20px 0px;
 }
 
+.global-error-message {
+  background-color: #ffe6e6;
+  color: #cc0000;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: 500;
+}
+
+
 .progress-container {
   text-align: center;
   margin-bottom: 30px;
@@ -290,20 +301,6 @@
   padding: 8px 0;
 }
 
-.track-order-btn {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.track-btn {
-  background: #ffcc00;
-  border: none;
-  padding: 10px 15px;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 .confirmation-step {
   text-align: center;
   display: flex;
@@ -356,8 +353,12 @@
   cursor: pointer;
   text-align: center;
   margin-top: 20px;
+  color: #ffffff;
 }
-
+.track-link:hover
+{
+  text-decoration: none;
+}
 .order-summary
 {
   background: #ffffff;

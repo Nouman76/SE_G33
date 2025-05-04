@@ -5,12 +5,15 @@ import FavouritesIcon from "../assets/heart.svg";
 import CartIcon from "../assets/bag.svg";
 import ProfileIcon from "../assets/profile.svg";
 import "../styles/Navbar.css";
+import { useCart } from "../components/CartContext";
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const [activePath, setActivePath] = useState("");
   const location = useLocation();
+  const { getTotalItems } = useCart();
+  const totalItems = getTotalItems();
   const isLoggedIn = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -88,12 +91,18 @@ const Navbar = () => {
           <Col md={2} className="icons-section">
             <div className="nav-icons">
               
-              <img
-                src={CartIcon}
-                alt="Cart"
-                className="clickable-icon"
-                onClick={() => (window.location.href = "/shop")}
-              />
+              <div className="cart-icon-wrapper">
+                <img
+                  src={CartIcon}
+                  alt="Cart"
+                  className="clickable-icon"
+                  onClick={() => (window.location.href = "/shop")}
+                />
+                {totalItems > 0 && (
+                  <div className="cart-badge">{totalItems}</div>
+                )}
+              </div>
+
               <img
                 src={ProfileIcon}
                 alt="Profile"

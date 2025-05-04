@@ -10,7 +10,8 @@ import axios from "axios";
 const Shop = () => {
   const { cartItems, removeFromCart } = useCart();
   const [step, setStep] = useState(1);
-  const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState({});  
   const [isMounted, setIsMounted] = useState(false);
   const { clearCart } = useCart();
   const [customerDetails, setCustomerDetails] = useState({
@@ -71,33 +72,33 @@ const Shop = () => {
 
   const handleConfirmOrder = async () => {
     const newErrors = {};
-  Object.entries(customerDetails).forEach(([key, value]) => {
-    if (!value.trim()) {
-      newErrors[key] = true;
-    }
-  });
-
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors);
-    return;
-  }
-
-  setErrors({});
-    const isAnyFieldEmpty = Object.values(customerDetails).some(
-      (value) => !value.trim()
-    );
-    if (isAnyFieldEmpty) {
-      alert("Please fulfill the required information");
+    let generalError = "";
+  
+    Object.entries(customerDetails).forEach(([key, value]) => {
+      if (!value.trim()) {
+        newErrors[key] = true;
+      }
+    });
+  
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setErrorMessage("All fields are required.");
       return;
     }
-
+  
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setErrorMessage("Login is required to place an order.");
+      return;
+    }
+  
+    const subtotal = calculateTotalPrice(cartItems);
+    if (subtotal === 0) {
+      setErrorMessage("No products added to cart.");
+      return;
+    }
+  
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Please login to place an order");
-        return;
-      }
-
       await Promise.all(
         cartItems.map(async (item) => {
           const response = await axios.get(
@@ -110,14 +111,14 @@ const Shop = () => {
           }
         })
       );
-
+  
       const productsToAdd = cartItems.map((item) => ({
         productId: item._id || item.id,
         name: item.name,
         price: item.price,
         quantity: item.qty,
       }));
-
+  
       await axios.post(
         "http://localhost:8000/buyer/add-purchases",
         { products: productsToAdd },
@@ -128,8 +129,8 @@ const Shop = () => {
           },
         }
       );
-
-      const total = calculateTotalPrice(cartItems) + deliveryCharge;
+  
+      const total = subtotal + deliveryCharge;
       setOrderDetails({
         items: cartItems,
         name: `${customerDetails.firstName} ${customerDetails.lastName}`,
@@ -137,11 +138,14 @@ const Shop = () => {
         paymentMethod: "Cash on Delivery",
         total,
       });
+  
+      setErrorMessage("");
+      setErrors({});
       setStep(3);
       clearCart();
     } catch (error) {
       console.error("Checkout error:", error);
-      alert(error.message || "Failed to complete purchase. Please try again.");
+      setErrorMessage(error.message || "Failed to complete purchase. Please try again.");
     }
   };
   return (
@@ -162,6 +166,10 @@ const Shop = () => {
             ))}
           </Row>
         </div>
+        {errorMessage && (
+          <div className="global-error-message">{errorMessage}</div>
+        )}
+
 
         {step === 1 && (
           <div className="cart-step">
@@ -241,9 +249,6 @@ const Shop = () => {
                          setCustomerDetails({ ...customerDetails, firstName: e.target.value })}
                          className={errors.firstName ? "input-error" : ""}
                           />
-                          {
-                            errors.firstName && <div className="error-text">This field is required</div>
-                          }
                      </div>
                    </Col>
                    <Col md={6}>
@@ -256,9 +261,7 @@ const Shop = () => {
                           setCustomerDetails({ ...customerDetails, lastName: e.target.value })}
                           className={errors.lastName ? "input-error" : ""}
                            />
-                           {
-                             errors.firstName && <div className="error-text">This field is required</div>
-                           }
+                         
                      </div>
                    </Col>
                  </Row>
@@ -274,9 +277,6 @@ const Shop = () => {
                           setCustomerDetails({ ...customerDetails, address: e.target.value })}
                           className={errors.address ? "input-error" : ""}
                            />
-                           {
-                             errors.firstName && <div className="error-text">This field is required</div>
-                           }
                      </div>
                    </Col>
                  </Row>
@@ -292,9 +292,6 @@ const Shop = () => {
                           setCustomerDetails({ ...customerDetails, city: e.target.value })}
                           className={errors.city ? "input-error" : ""}
                            />
-                           {
-                             errors.firstName && <div className="error-text">This field is required</div>
-                           }
                      </div>
                    </Col>
                    <Col md={6}>
@@ -307,9 +304,7 @@ const Shop = () => {
                           setCustomerDetails({ ...customerDetails, zip: e.target.value })}
                           className={errors.zip ? "input-error" : ""}
                            />
-                           {
-                             errors.firstName && <div className="error-text">This field is required</div>
-                           }
+              
                      </div>
                    </Col>
                  </Row>
@@ -326,9 +321,7 @@ const Shop = () => {
                           setCustomerDetails({ ...customerDetails, phone: e.target.value })}
                           className={errors.phone ? "input-error" : ""}
                            />
-                           {
-                             errors.firstName && <div className="error-text">This field is required</div>
-                           }
+                           
                      </div>
                    </Col>
                    <Col md={6}>
@@ -341,9 +334,7 @@ const Shop = () => {
                           setCustomerDetails({ ...customerDetails, email: e.target.value })}
                           className={errors.email ? "input-error" : ""}
                            />
-                           {
-                             errors.firstName && <div className="error-text">This field is required</div>
-                           }
+                           
                      </div>
                    </Col>
                  </Row>
@@ -373,21 +364,21 @@ const Shop = () => {
                     <span className="summary-value">Rs.{(calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2)}</span>
                   </div>
                   <div className="payment-method">
-  <div className="payment-title">Select Payment Method</div>
-  <div className="payment-option">
-    <input
-      type="radio"
-      id="cod"
-      name="paymentMethod"
-      value="Cash on Delivery"
-      checked={true} 
-      readOnly
-    />
-    <label htmlFor="cod">Cash on Delivery</label>
-  </div>
-</div>
+                  <div className="payment-title">Select Payment Method</div>
+                  <div className="payment-option">
+                    <input
+                      type="radio"
+                      id="cod"
+                      name="paymentMethod"
+                      value="Cash on Delivery"
+                      checked={true} 
+                      readOnly
+                    />
+                    <label htmlFor="cod">Cash on Delivery</label>
+                  </div>
+                </div>
 
-<div className="checkout-btn" onClick={handleConfirmOrder}>Place Order</div>
+                <div className="checkout-btn" onClick={handleConfirmOrder}>Place Order</div>
                 </div>
            </Col>
          </Row>
@@ -442,13 +433,13 @@ const Shop = () => {
                 <div className="item-value">{customerDetails.address}, {customerDetails.city}</div>
               </div>
               <a
-  href="https://www.tcsexpress.com/track/"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <div className="track-order-btn">Track Your Order</div>
-</a>
-
+                href="https://www.tcsexpress.com/track/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="track-link"
+              >
+                <div className="track-order-btn">Track Your Order</div>
+              </a>
             </div>
           </div>
         )}
