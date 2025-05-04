@@ -7,8 +7,8 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import Seller from "./models/seller.js";
 import sellerRoutes from "./routes/seller.js";
-import productRoutes from "./routes/product.js"; 
-import BuyerRoutes from './routes/buyer.js';
+import productRoutes from "./routes/product.js";
+import BuyerRoutes from "./routes/buyer.js";
 
 dotenv.config();
 
@@ -18,12 +18,11 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const uri = 'mongodb+srv://25100159:cyostz0VrFONapW8@cluster0.8pxma.mongodb.net/'; 
-mongoose.connect(uri)
+const uri = process.env.MONGO_URI;
+mongoose
+  .connect(uri)
   .then(() => console.log("Connected to MongoDB"))
-  .catch(err => console.error("Error connecting to MongoDB:", err));
-
+  .catch((err) => console.error("Error connecting to MongoDB:", err));
 const createAdmins = async () => {
   try {
     const existingAdmin1 = await Seller.findOne({ email: "admin@example.com" });
@@ -59,7 +58,6 @@ const createAdmins = async () => {
     } else {
       console.log("Second admin already exists.");
     }
-
   } catch (error) {
     console.error("Error creating admins:", error.message);
   }
@@ -71,11 +69,11 @@ mongoose.connection.once("open", async () => {
 
 app.use("/seller", sellerRoutes);
 app.use("/products", productRoutes);
-app.use('/buyer', BuyerRoutes);
+app.use("/buyer", BuyerRoutes);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:8000",
+    origin: process.env.CORS_ORIGIN || "http://localhost:8000",
     methods: ["GET", "POST"],
   },
 });
@@ -87,6 +85,7 @@ io.on("connection", (socket) => {
   });
 });
 
+// Use env-based port
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
