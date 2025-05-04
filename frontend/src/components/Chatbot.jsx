@@ -11,6 +11,7 @@ const Chatbot = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
   const navigate = useNavigate();
   
   
@@ -147,7 +148,7 @@ const Chatbot = () => {
       }
       
       
-      const response = await axios.get(`http://localhost:8000/products?search=${searchTerm}`);
+      const response = await axios.get(`${apiBaseUrl}/products?search=${searchTerm}`);
       const products = response.data;
       
       if (products.length === 0) {

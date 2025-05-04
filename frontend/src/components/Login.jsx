@@ -14,6 +14,8 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate(); 
 
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -26,7 +28,7 @@ const Login = () => {
     e.preventDefault();
   
     try {
-      const response = await axios.post("http://localhost:8000/buyer/login", formData);
+      const response = await axios.post(`${apiBaseUrl}/buyer/login`, formData);
   
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
@@ -38,7 +40,6 @@ const Login = () => {
       setErrorMessage(error.response ? error.response.data.message : "Something went wrong");
     }
   };
-  
 
   return (
     <div className="login-main">

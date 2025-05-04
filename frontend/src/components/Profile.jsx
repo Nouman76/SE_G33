@@ -21,6 +21,7 @@ const Profile = () => {
   const [passwordError, setPasswordError] = useState("");
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false);
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
 
   const [review, setReview] = useState({
     productId: "", 
@@ -39,7 +40,9 @@ const Profile = () => {
         const token = localStorage.getItem("token");
         console.log("Profile token:", token);
 
-        const response = await axios.get("http://localhost:8000/buyer/profile", {
+        const response = await axios.get(
+          `${apiBaseUrl}/buyer/profile`, 
+          {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -80,7 +83,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:8000/buyer/changepassword",
+        `${apiBaseUrl}/buyer/changepassword`,
         {
           oldPassword,
           newPassword,
@@ -111,7 +114,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        "http://localhost:8000/buyer/updateprofile",
+        `${apiBaseUrl}/buyer/updateprofile`,
         formValues,
         {
           headers: {
@@ -149,7 +152,7 @@ const Profile = () => {
       console.log("Review submitted for Product ID:", review.productId);
 
       const response = await axios.post(
-        `http://localhost:8000/products/${review.productId}/review`,
+        `${apiBaseUrl}/products/${review.productId}/review`,
         {
           buyerId: user.name,
           rating: review.rating,

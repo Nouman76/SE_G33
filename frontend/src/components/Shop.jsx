@@ -25,6 +25,7 @@ const Shop = () => {
   });
   const [orderDetails, setOrderDetails] = useState(null);
   const deliveryCharge = 10.0;
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
 
   useEffect(() => {
     setIsMounted(true);
@@ -102,7 +103,7 @@ const Shop = () => {
       await Promise.all(
         cartItems.map(async (item) => {
           const response = await axios.get(
-            `http://localhost:8000/products/${item._id || item.id}`
+            `${apiBaseUrl}/products/${item._id || item.id}`
           );
           if (response.data.stock < item.qty) {
             throw new Error(

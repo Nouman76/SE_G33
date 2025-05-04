@@ -16,7 +16,7 @@ const categories = [
 const ShopCategory = () => {
   const navigate = useNavigate();
   const [categoryProducts, setCategoryProducts] = useState({});
-
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
   const handleRedirect = (category) => {
     console.log(`Redirecting to category: ${category}`);
     navigate(`/shop-category/${encodeURIComponent(category)}`);
@@ -25,7 +25,7 @@ const ShopCategory = () => {
   useEffect(() => {
     categories.forEach(async (cat) => {
       try {
-        const response = await axios.get(`http://localhost:8000/products?search=${encodeURIComponent(cat.category)}`);
+        const response = await axios.get(`${apiBaseUrl}/products?search=${encodeURIComponent(cat.category)}`);
         setCategoryProducts(prev => ({
           ...prev,
           [cat.category]: response.data.slice(0, 3), 

@@ -16,6 +16,7 @@ const AddProduct = () => {
 
   const [sellerId, setSellerId] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -32,7 +33,7 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/products", { ...productData, seller: sellerId });
+      await axios.post(`${apiBaseUrl}/products`, { ...productData, seller: sellerId });
       setMessage({ type: "success", text: "Product added successfully!" });
       setProductData({
         name: "",

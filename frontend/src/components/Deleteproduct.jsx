@@ -7,6 +7,8 @@ const DeleteProduct = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
+
   const handleDelete = async () => {
     setSuccessMessage("");
     setErrorMessage("");
@@ -17,7 +19,7 @@ const DeleteProduct = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:8000/products/${productId}`);
+      await axios.delete(`${apiBaseUrl}/products/${productId}`);
       setSuccessMessage("Product deleted successfully!");
       setProductId("");
     } catch (error) {

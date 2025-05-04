@@ -17,6 +17,7 @@ const Signup = () => {
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -32,7 +33,7 @@ const Signup = () => {
     setIsError(false);
 
     try {
-      const response = await axios.post("http://localhost:8000/buyer/signup", formData);
+      const response = await axios.post(`${apiBaseUrl}/buyer/signup`, formData);
       setMessage("Signup successful! Redirecting...");
       setIsError(false);
       setTimeout(() => {

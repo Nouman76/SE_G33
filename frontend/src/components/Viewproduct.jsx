@@ -12,6 +12,7 @@ const ViewProducts = () => {
   const [filterCategory, setFilterCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
 
   useEffect(() => {
     fetchProducts();
@@ -44,7 +45,7 @@ const ViewProducts = () => {
         return;
       }
    
-      const response = await axios.get(`http://localhost:8000/products?sellerId=${sellerId}`);
+      const response = await axios.get(`${apiBaseUrl}/products?sellerId=${sellerId}`);
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -56,7 +57,7 @@ const ViewProducts = () => {
 
   const handleIncreaseStock = async (id, stock) => {
     try {
-      await axios.put(`http://localhost:8000/products/${id}`, { stock: stock + 1 });
+      await axios.put(`${apiBaseUrl}/products/${id}`, { stock: stock + 1 });
       fetchProducts();
     } catch (error) {
       alert("Error updating stock!");
@@ -67,7 +68,7 @@ const ViewProducts = () => {
     if (stock <= 1) {
       if (window.confirm("Are you sure you want to remove this product? Stock will be set to 0.")) {
         try {
-          await axios.put(`http://localhost:8000/products/${id}`, { stock: 0 });
+          await axios.put(`${apiBaseUrl}/products/${id}`, { stock: 0 });
           fetchProducts();
         } catch (error) {
           alert("Error updating stock!");
@@ -76,7 +77,7 @@ const ViewProducts = () => {
       return;
     }
     try {
-      await axios.put(`http://localhost:8000/products/${id}`, { stock: stock - 1 });
+      await axios.put(`${apiBaseUrl}/products/${id}`, { stock: stock - 1 });
       fetchProducts();
     } catch (error) {
       alert("Error updating stock!");
@@ -86,7 +87,7 @@ const ViewProducts = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
       try {
-        await axios.delete(`http://localhost:8000/products/${id}`);
+        await axios.delete(`${apiBaseUrl}/products/${id}`);
         fetchProducts();
       } catch (error) {
         alert("Error deleting product!");
@@ -107,7 +108,7 @@ const ViewProducts = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:8000/products/${editingProduct}`, editedProduct);
+      await axios.put(`${apiBaseUrl}/products/${editingProduct}`, editedProduct);
       setEditingProduct(null);
       fetchProducts();
     } catch (error) {

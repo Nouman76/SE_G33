@@ -12,11 +12,12 @@ const SearchBar = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const navigate = useNavigate();
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
 
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/products");
+        const response = await fetch(`${apiBaseUrl}/products`);
         const data = await response.json();
         console.log("Fetched product data:", data);
 

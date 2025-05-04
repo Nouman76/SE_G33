@@ -9,12 +9,12 @@ const SellerAnalytics = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
+  
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("seller");
     localStorage.removeItem("sellerId");
-    
     navigate("/admin");
   };
 
@@ -25,7 +25,7 @@ const SellerAnalytics = () => {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No authentication token found');
 
-        const response = await axios.get('http://localhost:8000/seller/analytics', {
+        const response = await axios.get(`${apiBaseUrl}/seller/analytics`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

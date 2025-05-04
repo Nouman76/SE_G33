@@ -10,23 +10,24 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
   const { addToCart } = useCart();
-  
+
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
+
   useEffect(() => {
-    axios.get(`http://localhost:8000/products/${id}`)
+    axios.get(`${apiBaseUrl}/products/${id}`)
       .then(res => {
         const productData = res.data;
         setProduct(productData);
-        setReviews(productData.reviews || []); 
+        setReviews(productData.reviews || []);
       })
       .catch(err => console.error("Error fetching product:", err));
-  }, [id]);
+  }, [id, apiBaseUrl]);
 
   const handleAddToCart = () => {
     if (product) {
       addToCart(product);
-      window.location.href= "../shoppage";
+      window.location.href = "../shoppage";
     }
-     
   };
 
   if (!product) return <div>Loading...</div>;
@@ -46,7 +47,6 @@ const ProductDetail = () => {
         </div>
       </div>
 
-     
       <div className="reviews-section">
         <h3>Customer Reviews</h3>
         {reviews.length > 0 ? (

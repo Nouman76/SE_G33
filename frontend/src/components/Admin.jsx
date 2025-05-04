@@ -15,6 +15,7 @@ const Admin = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -30,7 +31,7 @@ const Admin = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8000/seller/login", formData);
+      const response = await axios.post(`${apiBaseUrl}/seller/login`, formData);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("seller", JSON.stringify(response.data.seller));
       localStorage.setItem("sellerId", response.data.seller._id);

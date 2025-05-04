@@ -18,7 +18,8 @@ const ShopPage = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_URI;
+  
   useEffect(() => {
     fetchAllProducts();
   }, []);
@@ -30,7 +31,7 @@ const ShopPage = () => {
   const fetchAllProducts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8000/products");
+      const response = await axios.get(`${apiBaseUrl}/products`);
       const fetchedProducts = Array.isArray(response.data) 
         ? response.data 
         : response.data.products || [];
