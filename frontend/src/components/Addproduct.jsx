@@ -10,52 +10,72 @@ const AddProduct = () => {
     description: "",
     price: "",
     stock: "",
-    category: "Cat Food", // Default category
-    seller: "", // This will be auto-filled
+    category: "Cat Food", 
+    seller: "", 
   });
 
   const [sellerId, setSellerId] = useState("");
+  const [message, setMessage] = useState({ type: "", text: "" });
 
-   // Fetch seller ID from the token
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const decoded = jwtDecode(token); // ✅ Decode the token
-        setSellerId(decoded.id); // Extract seller ID
-      }
-    }, []);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token); 
+      setSellerId(decoded.id); 
+    }
+  }, []);
+
   const handleChange = (e) => {
     setProductData({ ...productData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        await axios.post("http://localhost:8000/products", { ...productData, seller: sellerId });
-        alert("Product added successfully!");
-        setProductData({
-          name: "",
-          description: "",
-          price: "",
-          stock: "",
-          category: "",
-          seller: "", // Reset but will auto-fetch
-        });
-      } catch (error) {
-        alert("Error adding product!");
-      }
-    };
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:8000/products", { ...productData, seller: sellerId });
+      setMessage({ type: "success", text: "Product added successfully!" });
+      setProductData({
+        name: "",
+        description: "",
+        price: "",
+        stock: "",
+        category: "Cat Food",
+        seller: "", 
+      });
+    } catch (error) {
+      setMessage({ type: "error", text: "Error adding product!" });
+    }
+  };
 
   return (
     <Container className="add-product-container">
-      {/* Title Section */}
       <Row>
         <Col>
           <div className="title">Add Product</div>
         </Col>
       </Row>
 
-      {/* Product Name */}
+      {message.text && (
+        <Row>
+          <Col>
+            <div
+              className={`message ${message.type === "success" ? "success" : "error"}`}
+              style={{
+                marginBottom: "15px",
+                padding: "10px",
+                color: message.type === "success" ? "#155724" : "#721c24",
+                backgroundColor: message.type === "success" ? "#d4edda" : "#f8d7da",
+                border: `1px solid ${message.type === "success" ? "#c3e6cb" : "#f5c6cb"}`,
+                borderRadius: "4px",
+              }}
+            >
+              {message.text}
+            </div>
+          </Col>
+        </Row>
+      )}
+
+      {/* Input fields below remain the same */}
       <Row>
         <Col md={12}>
           <div className="product-label">Product Name</div>
@@ -70,7 +90,6 @@ const AddProduct = () => {
         </Col>
       </Row>
 
-      {/* Description */}
       <Row>
         <Col md={12}>
           <div className="description-label">Description</div>
@@ -84,7 +103,6 @@ const AddProduct = () => {
         </Col>
       </Row>
 
-      {/* Price */}
       <Row>
         <Col md={12}>
           <div className="product-label">Price</div>
@@ -99,7 +117,6 @@ const AddProduct = () => {
         </Col>
       </Row>
 
-      {/* Stock */}
       <Row>
         <Col md={12}>
           <div className="product-label">Stock</div>
@@ -114,7 +131,6 @@ const AddProduct = () => {
         </Col>
       </Row>
 
-      {/* Category Dropdown */}
       <Row>
         <Col md={12}>
           <div className="product-label">Category</div>
@@ -133,7 +149,6 @@ const AddProduct = () => {
         </Col>
       </Row>
 
-      {/* Submit Button */}
       <Row>
         <Col md={12}>
           <div className="add-product-btn" onClick={handleSubmit}>

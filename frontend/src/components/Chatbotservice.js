@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 class ChatbotService {
-  // Search for products
+  
   static async searchProducts(query) {
     try {
       const response = await axios.get(`http://localhost:8000/products?search=${query}`);
@@ -13,7 +13,7 @@ class ChatbotService {
     }
   }
 
-  // Get product by ID
+  
   static async getProductById(productId) {
     try {
       const response = await axios.get(`http://localhost:8000/products/${productId}`);
@@ -24,7 +24,7 @@ class ChatbotService {
     }
   }
 
-  // Check if product is in stock
+ 
   static async checkProductStock(productId) {
     try {
       const product = await this.getProductById(productId);
@@ -39,7 +39,7 @@ class ChatbotService {
     }
   }
 
-  // Get products by category
+  
   static async getProductsByCategory(category) {
     try {
       const response = await axios.get(`http://localhost:8000/products/category/${category}`);

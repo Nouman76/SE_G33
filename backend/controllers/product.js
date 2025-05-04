@@ -1,5 +1,6 @@
 import Product from "../models/product.js";
 
+
 export const createProduct = async (req, res) => {
   try {
     const { name, description, price, stock, category, seller, images } = req.body;
@@ -38,6 +39,7 @@ export const addReview = async (req, res) => {
   try {
     const { productId } = req.params;
     const { buyerId, rating, comment } = req.body;
+
     if (!buyerId || !rating || !comment) {
       return res.status(400).json({ message: "Buyer ID, rating, and comment are required!" });
     }
@@ -56,13 +58,17 @@ export const addReview = async (req, res) => {
   }
 };
 
+
+
 export const getProducts = async (req, res) => {
   try {
     const { search, sellerId } = req.query;
     let query = {};
-        if (sellerId) {
+    
+    if (sellerId) {
       query.seller = sellerId;
     }
+
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: "i" } },
@@ -76,6 +82,9 @@ export const getProducts = async (req, res) => {
     res.status(500).json({ message: "Error fetching products!", error: error.message });
   }
 };
+
+
+
 
 
 export const getProductById = async (req, res) => {
@@ -111,7 +120,7 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params; 
-    const product = await Product.findByIdAndDelete(id);
+    const product = await Product.findByIdAndDelete(id); 
 
     if (!product) {
       return res.status(404).json({ message: "Product not found!" });

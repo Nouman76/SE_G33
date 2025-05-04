@@ -9,7 +9,6 @@ import InstagramIcon from '../assets/Instagram.svg';
 const Footer = () => {
   const navigate = useNavigate();
 
-  // Handle redirection to a specific category
   const handleCategoryRedirect = (category) => {
     console.log(`Redirecting to category: ${category}`);
     navigate(`/shop-category/${encodeURIComponent(category)}`);
@@ -56,7 +55,7 @@ const Footer = () => {
           <div className="footer-section">
             <h4 className="footer-heading">Contact</h4>
             <ul className="footer-links">
-              <li>+6231273732463</li>
+              <li>+92 3352812921</li>
               <li><a href="mailto:admin@qommarket.xom">admin@se_g33.xom</a></li>
             </ul>
           </div>

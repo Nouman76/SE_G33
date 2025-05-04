@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "bootstrap-4-react"; // Using React-Bootstrap 4
+import { Container, Row, Col } from "bootstrap-4-react";
 import PhoneLogo from "../assets/call-calling.svg";
 import Arrow from "../assets/arrow-down.svg";
 import "../styles/TopBar.css";

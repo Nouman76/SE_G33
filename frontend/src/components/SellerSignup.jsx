@@ -13,6 +13,9 @@ const SellerSignup = () => {
     selectedCategories: [],
   });
 
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const categories = [
     "Cat Food",
     "Dog Foods",
@@ -49,23 +52,23 @@ const SellerSignup = () => {
     };
 
     emailjs
-    .send("service_gclxhhj", "template_oc9jg9q", templateParams, "ci0v7i3gwQlwXyWJ5")
-      .then(
-        (response) => {
-          alert("Signup successful! We will contact you soon.");
-          setFormData({
-            name: "",
-            email: "",
-            phoneNumber: "",
-            storeName: "",
-            address: "",
-            selectedCategories: [],
-          });
-        },
-        (error) => {
-          alert("Error sending data. Please try again.");
-        }
-      );
+      .send("service_gclxhhj", "template_oc9jg9q", templateParams, "ci0v7i3gwQlwXyWJ5")
+      .then(() => {
+        setSuccessMessage("Signup successful! We will contact you soon.");
+        setErrorMessage("");
+        setFormData({
+          name: "",
+          email: "",
+          phoneNumber: "",
+          storeName: "",
+          address: "",
+          selectedCategories: [],
+        });
+      })
+      .catch(() => {
+        setErrorMessage("Error sending data. Please try again.");
+        setSuccessMessage("");
+      });
   };
 
   return (
@@ -76,6 +79,22 @@ const SellerSignup = () => {
             <div className="signup-title">Seller Signup</div>
           </Col>
         </Row>
+
+        {successMessage && (
+          <Row>
+            <Col>
+              <div className="ssuccess-msg">{successMessage}</div>
+            </Col>
+          </Row>
+        )}
+
+        {errorMessage && (
+          <Row>
+            <Col>
+              <div className="eerror-msg">{errorMessage}</div>
+            </Col>
+          </Row>
+        )}
 
         <form className="signup-form" onSubmit={handleSubmit}>
           <Row>
@@ -145,6 +164,7 @@ const SellerSignup = () => {
                   key={cat}
                   className="selected-category"
                   onClick={() => handleCategorySelect(cat)}
+                  type="button"
                 >
                   {cat} ✖
                 </button>
@@ -156,6 +176,7 @@ const SellerSignup = () => {
                     key={category}
                     className="category-btn"
                     onClick={() => handleCategorySelect(category)}
+                    type="button"
                   >
                     {category}
                   </button>

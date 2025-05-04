@@ -12,7 +12,7 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
   
   useEffect(() => {
-    axios.get('http://localhost:8000/products/${id}')
+    axios.get(`http://localhost:8000/products/${id}`)
       .then(res => {
         const productData = res.data;
         setProduct(productData);
@@ -24,7 +24,9 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product);
+      window.location.href= "../shop";
     }
+     
   };
 
   if (!product) return <div>Loading...</div>;
@@ -44,6 +46,7 @@ const ProductDetail = () => {
         </div>
       </div>
 
+     
       <div className="reviews-section">
         <h3>Customer Reviews</h3>
         {reviews.length > 0 ? (
@@ -52,7 +55,7 @@ const ProductDetail = () => {
               <div key={index} className="review">
                 <div className="review-header">
                   <span className="review-author">{review.buyer}</span>
-                  <span className="review-rating">{'⭐ ${review.rating}/5'}</span>
+                  <span className="review-rating">{`⭐ ${review.rating}/5`}</span>
                 </div>
                 <p className="review-comment">{review.comment}</p>
               </div>

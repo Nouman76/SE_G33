@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Container, Row } from "bootstrap-4-react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import "../styles/Admin.css";
 
 const Signup = () => {
@@ -16,6 +15,7 @@ const Signup = () => {
     phoneNumber: "",
   });
   const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -28,17 +28,19 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setMessage(""); 
+    setMessage("");
+    setIsError(false);
+
     try {
       const response = await axios.post("http://localhost:8000/buyer/signup", formData);
-      console.log(response.data); 
       setMessage("Signup successful! Redirecting...");
-      
+      setIsError(false);
       setTimeout(() => {
-        navigate("/login"); 
+        navigate("/login");
       }, 1000);
     } catch (error) {
-      alert(error.response?.data?.message || "Signup failed. Please try again.");
+      setMessage(error.response?.data?.message || "Signup failed. Please try again.");
+      setIsError(true);
     }
   };
 
@@ -117,9 +119,14 @@ const Signup = () => {
               </div>
             </form>
             <div className="signup-text">
-                Already have an account? <Link to="/login" className="signup-link">Sign In</Link>
-              </div>
-            {message && <p className="login-message">{message}</p>}
+              Already have an account?{" "}
+              <Link to="/login" className="signup-link">Sign In</Link>
+            </div>
+            {message && (
+              <p className={`login-message ${isError ? "error" : "success"}`}>
+                {message}
+              </p>
+            )}
           </div>
         </Row>
       </Container>

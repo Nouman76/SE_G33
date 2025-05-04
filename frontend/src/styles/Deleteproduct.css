@@ -28,3 +28,15 @@
 .delete-product-button:hover {
     background: darkred;
 }
+.sssuccess-message {
+    color: green;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .eeerror-message {
+    color: red;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  

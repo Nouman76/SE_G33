@@ -1,14 +1,13 @@
+
 .blog-page {
     padding: 40px 0;
     background-color: #f9f9f9;
   }
   
   .blog-heading {
-    color: #001c30;
-    font-weight: 700;
+    color: #333;
+    font-weight: 600;
     position: relative;
-    font-size: 40px;
-    text-align: center;
   }
   
   .blog-grid {
@@ -51,7 +50,7 @@
   .blog-title {
     font-size: 1.2rem;
     margin-bottom: 10px;
-    color: #001c30;
+    color: #333;
     font-weight: 600;
     line-height: 1.4;
   }
@@ -65,7 +64,7 @@
   
   .read-more-btn {
     display: inline-block;
-    background-color: #f4ce14;
+    background-color: #2a6496;
     color: white;
     padding: 8px 16px;
     border-radius: 30px;

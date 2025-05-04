@@ -12,8 +12,10 @@ const Chatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
+  
+  
   const OPENAI_API_KEY = "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";
-  // System prompt for the chatbot
+  
   const systemPrompt = `
     You are PetPal, a helpful assistant for a pet e-commerce website. 
     You can help users find products, check availability, and add items to their cart.
@@ -38,7 +40,7 @@ const Chatbot = () => {
     "VIEW_PRODUCT: [product_id]"
   `;
 
-  // Scroll to bottom when messages change
+  
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -60,37 +62,41 @@ const Chatbot = () => {
     
     if (inputMessage.trim() === '') return;
     
-    // Add user message to chat
+ 
     const userMessage = { text: inputMessage, sender: 'user' };
     setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
     setIsTyping(true);
     
     try {
-      // Transform user message for better context
+      
       const transformedMessage = `User asks: "${inputMessage}"`;
       
-      // Make API call to OpenAI
-      const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          model: "gpt-3.5-turbo",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: transformedMessage },
-          ],
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${OPENAI_API_KEY}`,
-          },
+      console.log("Making API call to OpenAI...");
+      
+     
+      const openaiApi = axios.create({
+        baseURL: 'https://api.openai.com/v1',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${OPENAI_API_KEY}`
         }
-      );
+      });
+      
+      
+      const response = await openaiApi.post('/chat/completions', {
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: transformedMessage },
+        ]
+      });
+      
+      console.log("API response received:", response.status);
       
       const botReply = response.data.choices[0].message.content;
       
-      // Process special commands
+      
       if (botReply.includes('SEARCH_QUERY:')) {
         const searchTerm = botReply.split('SEARCH_QUERY:')[1].trim();
         handleProductSearch(searchTerm, botReply);
@@ -101,13 +107,28 @@ const Chatbot = () => {
         const productId = botReply.split('VIEW_PRODUCT:')[1].trim();
         handleViewProduct(productId, botReply);
       } else {
-        // Regular message
+        
         setMessages(prev => [...prev, { text: botReply, sender: 'bot' }]);
       }
     } catch (error) {
       console.error('Error with chatbot API call:', error);
+      
+      let errorMessage = "Sorry, I'm having trouble connecting right now. Please try again later.";
+      
+      if (error.response) {
+        console.error('Error data:', error.response.data);
+        console.error('Error status:', error.response.status);
+        
+        if (error.response.status === 401) {
+          errorMessage = "There seems to be an authentication issue. Please contact support.";
+        }
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+        errorMessage = "Can't reach the OpenAI servers. Please check your internet connection.";
+      }
+      
       setMessages(prev => [...prev, { 
-        text: "Sorry, I'm having trouble connecting right now. Please try again later.", 
+        text: errorMessage, 
         sender: 'bot' 
       }]);
     } finally {
@@ -115,18 +136,17 @@ const Chatbot = () => {
     }
   };
 
-  // Handle product search
-  // Handle product search
-const handleProductSearch = async (searchTerm, originalReply) => {
+  
+  const handleProductSearch = async (searchTerm, originalReply) => {
     try {
       const cleanReply = originalReply.replace(/SEARCH_QUERY:.*$/m, '').trim();
       
-      // Add initial bot response without the command
+      
       if (cleanReply) {
         setMessages(prev => [...prev, { text: cleanReply, sender: 'bot' }]);
       }
       
-      // Search products from API
+      
       const response = await axios.get(`http://localhost:8000/products?search=${searchTerm}`);
       const products = response.data;
       
@@ -136,18 +156,17 @@ const handleProductSearch = async (searchTerm, originalReply) => {
           sender: 'bot' 
         }]);
       } else {
-        // First, check if this is a category search
+        
         const isCategory = ["cat food", "dog food", "cat accessories", "dog accessories", "pet medicine"]
           .some(category => searchTerm.toLowerCase().includes(category.toLowerCase()));
         
-        // Multiple products found
+       
         setMessages(prev => [...prev, { 
           text: `I found ${products.length} products matching "${searchTerm}":`, 
           sender: 'bot'
         }]);
         
-        // OPTION 1: Show all products in chat (up to a reasonable limit)
-        // Display up to 10 products max (to avoid extremely long chats)
+        
         const displayProducts = products.slice(0, 10);
         displayProducts.forEach(product => {
           setMessages(prev => [...prev, { 
@@ -157,17 +176,14 @@ const handleProductSearch = async (searchTerm, originalReply) => {
           }]);
         });
         
-        // If there are more than 10 products, still provide a link to see all
         if (products.length > 10) {
           let url = '';
           
-          // If it's a category search, use the category endpoint instead of name search
           if (isCategory) {
-            // Extract the category name
             let categoryName = '';
             ["cat food", "dog food", "cat accessories", "dog accessories", "pet medicine"].forEach(category => {
               if (searchTerm.toLowerCase().includes(category)) {
-                categoryName = category.replace(' ', '-'); // Format for URL
+                categoryName = category.replace(' ', '-'); 
               }
             });
             
@@ -196,17 +212,15 @@ const handleProductSearch = async (searchTerm, originalReply) => {
     }
   };
 
-  // Handle add to cart
+  
   const handleAddToCart = async (productId, originalReply) => {
     try {
       const cleanReply = originalReply.replace(/ADD_TO_CART:.*$/m, '').trim();
       
-      // Add initial bot response without the command
       if (cleanReply) {
         setMessages(prev => [...prev, { text: cleanReply, sender: 'bot' }]);
       }
       
-      // Get product details
       const response = await axios.get(`http://localhost:8000/products/${productId}`);
       const product = response.data;
       
@@ -228,17 +242,15 @@ const handleProductSearch = async (searchTerm, originalReply) => {
     }
   };
 
-  // Handle view product
+  
   const handleViewProduct = async (productId, originalReply) => {
     try {
       const cleanReply = originalReply.replace(/VIEW_PRODUCT:.*$/m, '').trim();
       
-      // Add initial bot response without the command
       if (cleanReply) {
         setMessages(prev => [...prev, { text: cleanReply, sender: 'bot' }]);
       }
       
-      // Get product details
       const response = await axios.get(`http://localhost:8000/products/${productId}`);
       const product = response.data;
       
@@ -260,15 +272,12 @@ const handleProductSearch = async (searchTerm, originalReply) => {
     }
   };
 
-  // Handle clicking on product link
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);
   };
 
-  // Handle action buttons (like adding to cart or viewing product)
   const handleActionClick = (action) => {
     if (action.type === 'addToCart') {
-      // This would integrate with your CartContext later
       setMessages(prev => [...prev, { 
         text: `${action.productName} has been added to your cart!`, 
         sender: 'bot' 

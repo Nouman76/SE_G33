@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const uri =  "mongodb+srv://25100159:cyostz0VrFONapW8@cluster0.8pxma.mongodb.net/";
+const uri = process.env.MONGODB_URI; 
 mongoose.connect(uri)
   .then(() => console.log("Connected to MongoDB"))
   .catch(err => console.error("Error connecting to MongoDB:", err));
@@ -71,7 +71,6 @@ mongoose.connection.once("open", async () => {
 
 app.use("/seller", sellerRoutes);
 app.use("/products", productRoutes);
-
 app.use('/buyer', BuyerRoutes);
 
 const io = new Server(server, {
@@ -83,6 +82,9 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("USER CONNECTED:", socket.id);
+  socket.on("message", (data) => {
+    console.log("Message from client:", data);
+  });
 });
 
 const PORT = process.env.PORT || 8000;

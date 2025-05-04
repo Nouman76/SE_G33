@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix for default marker icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -38,7 +37,6 @@ const NearestPetCare = () => {
   const [error, setError] = useState(null);
   const [currentZoom, setCurrentZoom] = useState(14);
 
-  // Custom icons
   const petIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
@@ -55,11 +53,9 @@ const NearestPetCare = () => {
     popupAnchor: [1, -34],
   });
 
-  // Strict filter for pet-related locations only
   const isPetRelated = (tags) => {
     if (!tags) return false;
     
-    // List of valid pet-related OSM tags
     const validPetAmenities = [
       'veterinary',
       'animal_shelter',
@@ -78,14 +74,11 @@ const NearestPetCare = () => {
       'animal'
     ];
 
-    // Check if it's a valid pet amenity or shop
     if (validPetAmenities.includes(tags.amenity) )return true;
     if (validPetShops.includes(tags.shop)) return true;
     
-    // Additional checks for healthcare=veterinary
     if (tags.healthcare === 'veterinary') return true;
     
-    // Check name for pet-related keywords
     const petKeywords = ['vet', 'veterinary', 'animal', 'pet', 'dog', 'cat', 'puppy', 'kitten'];
     if (tags.name) {
       const lowerName = tags.name.toLowerCase();
@@ -98,12 +91,12 @@ const NearestPetCare = () => {
   const fetchPetCareLocations = useCallback(async (lat, lng, zoom) => {
     setLoading(true);
     try {
-      const radius = zoom < 10 ? 50000 : // 50km when zoomed out
-                    zoom < 12 ? 20000 : // 20km
-                    zoom < 14 ? 10000 : // 10km
-                    5000; // 5km default
+      const radius = zoom < 10 ? 50000 : 
+                    zoom < 12 ? 20000 : 
+                    zoom < 14 ? 10000 : 
+                    5000; 
 
-      // More specific query for pet-related locations only
+      
       const overpassQuery = `
         [out:json];
         (
@@ -119,7 +112,6 @@ const NearestPetCare = () => {
       const response = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`);
       const data = await response.json();
 
-      // Apply additional filtering to ensure only pet-related locations
       const locations = data.elements
         .filter(loc => loc.lat && loc.lon && isPetRelated(loc.tags))
         .map(loc => ({
@@ -133,7 +125,6 @@ const NearestPetCare = () => {
         }));
 
       setPetCareLocations(prev => {
-        // Merge new locations with existing ones, avoiding duplicates
         const newLocations = locations.filter(newLoc => 
           !prev.some(existing => 
             Math.abs(existing.lat - newLoc.lat) < 0.0001 && 

@@ -59,7 +59,6 @@ const Home = () => {
 
       <ShopCategory />
       
-      {/* Add the Chatbot component */}
       <Chatbot />
     </div>
   );

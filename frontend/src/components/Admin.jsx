@@ -13,6 +13,7 @@ const Admin = () => {
     password: "",
   });
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -25,7 +26,8 @@ const Admin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setMessage(""); // Reset message
+    setMessage("");
+    setError("");
 
     try {
       const response = await axios.post("http://localhost:8000/seller/login", formData);
@@ -33,12 +35,11 @@ const Admin = () => {
       localStorage.setItem("seller", JSON.stringify(response.data.seller));
       localStorage.setItem("sellerId", response.data.seller._id);
       setMessage("Login successful! Redirecting...");
-      
       setTimeout(() => {
-        navigate("/admindashboard"); // Redirect to Admin Dashboard
+        navigate("/admindashboard");
       }, 1000);
     } catch (error) {
-      alert(error.response?.data?.message || "Login failed. Please try again.");
+      setError(error.response?.data?.message || "Login failed. Please try again.");
     }
   };
 
@@ -81,9 +82,12 @@ const Admin = () => {
               </div>
             </form>
             <div className="signup-text">
-                Want to Register your Store on our Platform? <Link to="/sellersignup" className="signup-link">Sign Up</Link>
-              </div>
-            {message && <p className="login-message">{message}</p>}
+              Want to Register your Store on our Platform?{" "}
+              <Link to="/sellersignup" className="signup-link">Sign Up</Link>
+            </div>
+
+            {message && <p className="login-message success">{message}</p>}
+            {error && <p className="login-message error">{error}</p>}
           </div>
         </Row>
       </Container>

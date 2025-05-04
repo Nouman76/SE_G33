@@ -18,12 +18,12 @@ import ShopPage from "./components/ShopPage";
 import Profile from "./components/Profile";
 import NearestPetCare from './components/NearestPetCare';
 import ProductDetail from "./components/ProductDetail";
-import { CartProvider } from "./components/CartContext"; // Import CartProvider
+import { CartProvider } from "./components/CartContext"; 
 import SellerAnalytics from "./components/SellerAnalytics";
 import "./App.css";
 import ProtectedRoute from "./components/ProtectedRoute"; 
 import BlogPage from "./components/Blogpage";
-import AboutUs from "./components/Aboutus"; // Import AboutUs component
+import AboutUs from "./components/Aboutus"; 
 
 
 
@@ -31,7 +31,6 @@ import AboutUs from "./components/Aboutus"; // Import AboutUs component
 function AppContent() {
   const location = useLocation();
   
-  // Hide Header and Footer on all admin-related pages
   const isAdminPage = location.pathname.startsWith("/admin") || 
   location.pathname.startsWith("/seller/analytics")||
   location.pathname.startsWith("/sellersignup") ;
@@ -39,7 +38,7 @@ function AppContent() {
   return (
     <div className="App">
       {!isAdminPage && <Header />}
-      <CartProvider> {/* Wrap Routes with CartProvider */}
+      <CartProvider> 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/blog" element={<BlogPage />} />
@@ -54,10 +53,8 @@ function AppContent() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/shoppage" element={<ShopPage />} />
           <Route path="/shop-category/:categoryName" element={<ShopPage />} />
-               {/* Admin login page (unprotected) */}
                <Route path="/admin" element={<Admin />} />
           
-          {/* Protected admin/seller routes */}
           <Route path='/seller/analytics' element={
             <ProtectedRoute>
               <SellerAnalytics />

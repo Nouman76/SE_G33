@@ -33,7 +33,7 @@ const AdminDashboard = () => {
         </ul>
       </nav>
 
-      {/* Dynamic Content Area */}
+      
       <div className="dynamic-content">
         {selectedPage === "add-product" && <AddProduct />}
         {selectedPage === "view-products" && <ViewProducts />}

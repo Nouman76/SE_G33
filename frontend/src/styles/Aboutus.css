@@ -1,177 +1,177 @@
 .about-us-page {
-    padding: 40px 0;
-    background-color: #f8f9fa;
-    font-family: "Roboto", sans-serif;
-  }
-  
-  .section-title {
-    color: #001c30;
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 20px;
-  }
-  
-  .underline {
-    height: 2px;
-    width: 250px;
-    background-color: #f4ce14;
-    margin-bottom: 25px;
-  }
-  
-  .company-intro {
-    margin-bottom: 60px;
-  }
-  
-  .company-description {
-    color: #8E96A4;
-    margin-bottom: 30px;
-    font-size: 24PX;
-  }
-  
-  .video-placeholder {
-    background-color: #e9e9e9;
-    height: 350px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
-  }
-  
-  .play-button {
-    width: 70px;
-    height: 70px;
-    background-color: #ff5722;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-  }
-  
-  .play-button:hover {
-    transform: scale(1.1);
-    background-color: #e64a19;
-  }
-  
-  .mission-vision-section {
-    margin-bottom: 60px;
-  }
-  
+  padding: 40px 0;
+  background-color: #f8f9fa;
+  font-family: "Roboto", sans-serif;
+}
+
+.section-title {
+  color: #001c30;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.underline {
+  height: 2px;
+  width: 250px;
+  background-color: #f4ce14;
+  margin-bottom: 25px;
+}
+
+.company-intro {
+  margin-bottom: 60px;
+}
+
+.company-description {
+  color: #8E96A4;
+  margin-bottom: 30px;
+  font-size: 24PX;
+}
+
+.video-placeholder {
+  background-color: #e9e9e9;
+  height: 350px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.play-button {
+  width: 70px;
+  height: 70px;
+  background-color: #ff5722;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.play-button:hover {
+  transform: scale(1.1);
+  background-color: #e64a19;
+}
+
+.mission-vision-section {
+  margin-bottom: 60px;
+}
+
+.mission-box, .vision-box {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  height: 100%;
+}
+
+.mission-box-description, .vision-box-description {
+  color: #8E96A4;
+  font-weight: 500;
+}
+
+.team-section {
+  margin-bottom: 60px;
+}
+
+.team-description {
+  color: #8E96A4;
+  margin-bottom: 30px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.team-members {
+  margin-top: 40px;
+}
+
+.team-member-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.member-image {
+  height: 200px;
+  background-color: #e9e9e9;
+  margin-bottom: 20px;
+}
+
+.member-name {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.member-title {
+  color: #8E96A4;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.values-section {
+  margin-bottom: 60px;
+}
+
+.value-card {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.value-icon {
+  width: 70px;
+  height: 70px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 24px;
+  color: #ff9800;
+}
+
+.value-card-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.value-card-description {
+  color: #8E96A4;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+@media (max-width: 767px) {
   .mission-box, .vision-box {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    height: 100%;
-  }
-  
-  .mission-box-description, .vision-box-description {
-    color: #8E96A4;
-    font-weight: 500;
-  }
-  
-  .team-section {
-    margin-bottom: 60px;
-  }
-  
-  .team-description {
-    color: #8E96A4;
     margin-bottom: 30px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .team-members {
-    margin-top: 40px;
-  }
-  
-  .team-member-card {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .team-member-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .member-image {
-    height: 200px;
-    background-color: #e9e9e9;
-    margin-bottom: 20px;
-  }
-  
-  .member-name {
-    font-size: 26px;
-    font-weight: 600;
-    margin-bottom: 5px;
-  }
-  
-  .member-title {
-    color: #8E96A4;
-    margin-bottom: 20px;
-    font-weight: 700;
-  }
-  
-  .values-section {
-    margin-bottom: 60px;
   }
   
   .value-card {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    text-align: center;
-    height: 100%;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 30px;
   }
-  
-  .value-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .value-icon {
-    width: 70px;
-    height: 70px;
-    background-color: #f5f5f5;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    font-size: 24px;
-    color: #ff9800;
-  }
-  
-  .value-card-title {
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 15px;
-  }
-  
-  .value-card-description {
-    color: #8E96A4;
-    font-weight: 500;
-    font-size: 16px;
-  }
-  
-  @media (max-width: 767px) {
-    .mission-box, .vision-box {
-      margin-bottom: 30px;
-    }
-    
-    .value-card {
-      margin-bottom: 30px;
-    }
-  }
+}

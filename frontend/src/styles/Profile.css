@@ -1,4 +1,4 @@
-/* Profile.css */
+
 
 body {
   font-family: 'Roboto', sans-serif;
@@ -66,7 +66,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* Improved Order Styles */
 .orders-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -179,9 +178,11 @@ body {
   background-color: #003566;
 }
 
-/* input[type="text"],
-input[type="email"],
-input[type="password"] {
+.profile-addres,
+.profile-namee,
+.profile-emaill,
+.profile-phonee,
+.profile-pasword {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
@@ -190,10 +191,12 @@ input[type="password"] {
   font-size: 16px;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
+.profile-addres:focus,
+.profile-namee:focus,
+.profile-emaill:focus,
+.profile-phonee:focus,
+.profile-pasword:focus {
   outline: none;
   border-color: #001c30;
   box-shadow: 0 0 0 2px rgba(0, 28, 48, 0.2);
-} */
+}

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "bootstrap-4-react";
 import axios from "axios";
-import "../styles/ShopPage.css"; // Reuse styles from ShopCategory.css
-import img from "../assets/product.png"; // Default product image
+import "../styles/ShopPage.css"; 
+import img from "../assets/product.png"; 
 
 const ShopPage = () => {
-  const { categoryName } = useParams(); // Get the category from the URL if it exists
+  const { categoryName } = useParams(); 
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
@@ -43,7 +43,7 @@ const ShopPage = () => {
           <Col md={6} className="view-all-container">
             <div
               className="view-all-btn"
-              onClick={() => navigate(`/shoppage`)} // Navigate to shop page without category filter
+              onClick={() => navigate(`/shoppage`)} 
               style={{ cursor: 'pointer' }}
             >
               View All
@@ -52,18 +52,18 @@ const ShopPage = () => {
         </Row>
 
         <Row className="display-products">
-          {/* Display products in a similar layout */}
+          
           {products.length > 0 ? (
             products.map((product, index) => (
               <Col md={4} key={index}>
                 <Row className="product-row">
-                  {/* Image on Left */}
+                 
                   <Col md={5}>
                     <div className="product-img-container">
                       <img src={img} alt={`${product.name} Image`} className="product-img" />
                     </div>
                   </Col>
-                  {/* Product Details on Right */}
+                 
                   <Col md={7}>
                     <div className="product-details">
                       <div className="product-category">{product.category}</div>

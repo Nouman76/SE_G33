@@ -43,7 +43,7 @@
   border-bottom: 1px solid #8e96a4;
   cursor: pointer;
   transition: background 0.3s, color 0.3s;
-  color: #f4ce14; /* Updated color */
+  color: #f4ce14; 
 }
 .nav-link:hover
 {
@@ -55,7 +55,7 @@
 }
 
 .dynamic-content {
-  margin-left: 270px; /* Adjusted for sidebar */
+  margin-left: 270px; 
   padding: 20px;
   flex-grow: 1;
   width: calc(100% - 270px);

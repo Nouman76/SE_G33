@@ -10,6 +10,7 @@ import axios from "axios";
 const Shop = () => {
   const { cartItems, removeFromCart } = useCart();
   const [step, setStep] = useState(1);
+  const [errors, setErrors] = useState({});
   const [isMounted, setIsMounted] = useState(false);
   const { clearCart } = useCart();
   const [customerDetails, setCustomerDetails] = useState({
@@ -21,23 +22,18 @@ const Shop = () => {
     phone: "",
     email: "",
   });
-  const [orderDetails, setOrderDetails] = useState(null); 
+  const [orderDetails, setOrderDetails] = useState(null);
   const deliveryCharge = 10.0;
 
-  // Debug cart items
   useEffect(() => {
     setIsMounted(true);
-    console.log("Cart items from context:", cartItems);
-    console.log("Cart items from localStorage:", JSON.parse(localStorage.getItem("cart")));
     return () => setIsMounted(false);
-  }, [cartItems]);
+  }, []);
 
-  if (!isMounted) {
-    return <div>Loading cart...</div>;
-  }
-  const calculateTotalPrice = (items) => {
-    return items.reduce((acc, item) => acc + item.price * item.qty, 0);
-  };
+  if (!isMounted) return <div>Loading cart...</div>;
+
+  const calculateTotalPrice = (items) =>
+    items.reduce((acc, item) => acc + item.price * item.qty, 0);
 
   const handleRemove = (id) => {
     removeFromCart(id);
@@ -45,27 +41,28 @@ const Shop = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const emailData = {
-      to_email: "noumanasad27@gmail.com",
       from_name: `${customerDetails.firstName} ${customerDetails.lastName}`,
       address: customerDetails.address,
       city: customerDetails.city,
       zip: customerDetails.zip,
       phone: customerDetails.phone,
       email: customerDetails.email,
+      total: (calculateTotalPrice(cartItems) + deliveryCharge).toFixed(2),
+      items: JSON.stringify(cartItems.map(item => ({ name: item.name, qty: item.qty }))),
     };
 
     emailjs
       .send(
-        "YOUR_SERVICE_ID",
-        "YOUR_TEMPLATE_ID",
+        "service_gclxhhj",
+        "template_zgzn3b9",
         emailData,
-        "YOUR_PUBLIC_KEY"
+        "ci0v7i3gwQlwXyWJ5"
       )
-      .then((response) => {
+      .then(() => {
         alert("Details Sent Successfully!");
-        handleConfirmOrder(); // Proceed to next step after successful submission
+        handleConfirmOrder();
       })
       .catch((error) => {
         alert("Error Sending Email: " + error.text);
@@ -73,15 +70,35 @@ const Shop = () => {
   };
 
   const handleConfirmOrder = async () => {
+    const newErrors = {};
+  Object.entries(customerDetails).forEach(([key, value]) => {
+    if (!value.trim()) {
+      newErrors[key] = true;
+    }
+  });
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  setErrors({});
+    const isAnyFieldEmpty = Object.values(customerDetails).some(
+      (value) => !value.trim()
+    );
+    if (isAnyFieldEmpty) {
+      alert("Please fulfill the required information");
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         alert("Please login to place an order");
         return;
       }
-  
-      // First validate stock availability
-      const stockCheck = await Promise.all(
+
+      await Promise.all(
         cartItems.map(async (item) => {
           const response = await axios.get(
             `http://localhost:8000/products/${item._id || item.id}`
@@ -91,31 +108,27 @@ const Shop = () => {
               `Not enough stock for ${item.name}. Available: ${response.data.stock}`
             );
           }
-          return true;
         })
       );
-  
-      // Prepare products data
-      const productsToAdd = cartItems.map(item => ({
+
+      const productsToAdd = cartItems.map((item) => ({
         productId: item._id || item.id,
         name: item.name,
         price: item.price,
-        quantity: item.qty
+        quantity: item.qty,
       }));
-  
-      // Add to buyer's purchased products (this will also reduce stock)
-      const response = await axios.post(
+
+      await axios.post(
         "http://localhost:8000/buyer/add-purchases",
         { products: productsToAdd },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         }
       );
-  
-      // Proceed with checkout
+
       const total = calculateTotalPrice(cartItems) + deliveryCharge;
       setOrderDetails({
         items: cartItems,
@@ -126,7 +139,6 @@ const Shop = () => {
       });
       setStep(3);
       clearCart();
-      
     } catch (error) {
       console.error("Checkout error:", error);
       alert(error.message || "Failed to complete purchase. Please try again.");
@@ -135,10 +147,8 @@ const Shop = () => {
   return (
     <div className="shop-container">
       <Container>
-        {/* Section Headings */}
         <div className="cart-title">Cart</div>
 
-        {/* Progress Indicator */}
         <div className="progress-container">
           <Row>
             {["Shopping Cart", "Shipping & Checkout", "Confirmation"].map((title, index) => (
@@ -153,13 +163,11 @@ const Shop = () => {
           </Row>
         </div>
 
-        {/* 🛒 Shopping Cart Section */}
         {step === 1 && (
           <div className="cart-step">
             <Row>
               <Col md={8}>
                 <div className="products-in-cart">
-                  {/* Cart Header */}
                   <Row className="cart-header">
                     <Col md={6}>Product Details</Col>
                     <Col md={2}>Price</Col>
@@ -168,7 +176,6 @@ const Shop = () => {
                     <Col md={1} className="text-center"></Col>
                   </Row>
 
-                  {/* Cart Items */}
                   {cartItems.map((item) => (
                     <Row key={item.id || item._id} className="cart-item">
                       <Col md={6} className="cart-item-details">
@@ -187,8 +194,6 @@ const Shop = () => {
               </Col>
 
 
-
-              {/* Cart Summary Section */}
               <Col md={4}>
                 <div className="cart-summary">
                   <div className="cart-weight">Total Cart</div>
@@ -213,11 +218,9 @@ const Shop = () => {
           </div>
         )}
 
-        {/* 🚚 Shipping & Checkout Section */}
         {step === 2 && (
          <div className="checkout-step">
          <Row>
-           {/* Billing Details Section */}
            <Col md={8}>
              <div className="billing-details">
                <Row>
@@ -227,7 +230,6 @@ const Shop = () => {
                <div className="divider"></div>
        
                <div className="get-details">
-                 {/* First Name & Last Name */}
                  <Row>
                    <Col md={6}>
                      <div className="input-container">
@@ -235,9 +237,13 @@ const Shop = () => {
                          type="text"
                          placeholder="First Name"
                          value={customerDetails.firstName}
-                         onChange={(e) => setCustomerDetails({ ...customerDetails, firstName: e.target.value })}
-                         required
-                       />
+                         onChange={(e) =>
+                         setCustomerDetails({ ...customerDetails, firstName: e.target.value })}
+                         className={errors.firstName ? "input-error" : ""}
+                          />
+                          {
+                            errors.firstName && <div className="error-text">This field is required</div>
+                          }
                      </div>
                    </Col>
                    <Col md={6}>
@@ -246,14 +252,17 @@ const Shop = () => {
                          type="text"
                          placeholder="Last Name"
                          value={customerDetails.lastName}
-                         onChange={(e) => setCustomerDetails({ ...customerDetails, lastName: e.target.value })}
-                         required
-                       />
+                         onChange={(e) =>
+                          setCustomerDetails({ ...customerDetails, lastName: e.target.value })}
+                          className={errors.lastName ? "input-error" : ""}
+                           />
+                           {
+                             errors.firstName && <div className="error-text">This field is required</div>
+                           }
                      </div>
                    </Col>
                  </Row>
        
-                 {/* Address */}
                  <Row>
                    <Col md={12}>
                      <div className="input-container">
@@ -261,14 +270,17 @@ const Shop = () => {
                          type="text"
                          placeholder="Address"
                          value={customerDetails.address}
-                         onChange={(e) => setCustomerDetails({ ...customerDetails, address: e.target.value })}
-                         required
-                       />
+                         onChange={(e) =>
+                          setCustomerDetails({ ...customerDetails, address: e.target.value })}
+                          className={errors.address ? "input-error" : ""}
+                           />
+                           {
+                             errors.firstName && <div className="error-text">This field is required</div>
+                           }
                      </div>
                    </Col>
                  </Row>
        
-                 {/* City & Postal Code */}
                  <Row>
                    <Col md={6}>
                      <div className="input-container">
@@ -276,9 +288,13 @@ const Shop = () => {
                          type="text"
                          placeholder="Town/City"
                          value={customerDetails.city}
-                         onChange={(e) => setCustomerDetails({ ...customerDetails, city: e.target.value })}
-                         required
-                       />
+                         onChange={(e) =>
+                          setCustomerDetails({ ...customerDetails, city: e.target.value })}
+                          className={errors.city ? "input-error" : ""}
+                           />
+                           {
+                             errors.firstName && <div className="error-text">This field is required</div>
+                           }
                      </div>
                    </Col>
                    <Col md={6}>
@@ -287,14 +303,18 @@ const Shop = () => {
                          type="text"
                          placeholder="Postal Code"
                          value={customerDetails.zip}
-                         onChange={(e) => setCustomerDetails({ ...customerDetails, zip: e.target.value })}
-                         required
-                       />
+                         onChange={(e) =>
+                          setCustomerDetails({ ...customerDetails, zip: e.target.value })}
+                          className={errors.zip ? "input-error" : ""}
+                           />
+                           {
+                             errors.firstName && <div className="error-text">This field is required</div>
+                           }
                      </div>
                    </Col>
                  </Row>
        
-                 {/* Phone & Email */}
+                 
                  <Row>
                    <Col md={6}>
                      <div className="input-container">
@@ -302,9 +322,13 @@ const Shop = () => {
                          type="text"
                          placeholder="Phone Number"
                          value={customerDetails.phone}
-                         onChange={(e) => setCustomerDetails({ ...customerDetails, phone: e.target.value })}
-                         required
-                       />
+                         onChange={(e) =>
+                          setCustomerDetails({ ...customerDetails, phone: e.target.value })}
+                          className={errors.phone ? "input-error" : ""}
+                           />
+                           {
+                             errors.firstName && <div className="error-text">This field is required</div>
+                           }
                      </div>
                    </Col>
                    <Col md={6}>
@@ -313,9 +337,13 @@ const Shop = () => {
                          type="email"
                          placeholder="Email"
                          value={customerDetails.email}
-                         onChange={(e) => setCustomerDetails({ ...customerDetails, email: e.target.value })}
-                         required
-                       />
+                         onChange={(e) =>
+                          setCustomerDetails({ ...customerDetails, email: e.target.value })}
+                          className={errors.email ? "input-error" : ""}
+                           />
+                           {
+                             errors.firstName && <div className="error-text">This field is required</div>
+                           }
                      </div>
                    </Col>
                  </Row>
@@ -323,12 +351,10 @@ const Shop = () => {
        
                <div className="divider"></div>
        
-               {/* Save Button */}
                <div className="save-btn" onClick={handleSubmit}>Save</div>
              </div>
            </Col>
        
-           {/* Shopping Cart Summary Section */}
            <Col md={4}>
                <div className="cart-summary">
                   <div className="cart-weight">Total Cart</div>
@@ -354,7 +380,7 @@ const Shop = () => {
       id="cod"
       name="paymentMethod"
       value="Cash on Delivery"
-      checked={true} // Default selection
+      checked={true} 
       readOnly
     />
     <label htmlFor="cod">Cash on Delivery</label>
@@ -368,22 +394,18 @@ const Shop = () => {
        </div>
         )}
 
-        {/* ✅ Order Confirmation Section */}
         {step === 3 && (
           <div className="confirmation-step">
-            {/* Success Message Block */}
             <div className="order-success">
               <img src={successIcon} alt="Success" className="success-icon" />
               <div className="success-title">Your Order Has Been Fulfilled</div>
               <div className="success-subtext">I'm grateful. We've received your order.</div>
             </div>
 
-            {/* Order Summary Block */}
             <div className="order-summary">
               <div className="summary-title">Order Details</div>
               <div className="divider"></div>
 
-              {/* Order Items List */}
               {cartItems.map((item, index) => (
                 <div key={index} className="order-item">
                   <div className="item-label">Item Name:</div>
@@ -391,19 +413,16 @@ const Shop = () => {
                 </div>
               ))}
 
-              {/* Subtotal */}
               <div className="order-item">
                 <div className="item-label">Subtotal:</div>
                 <div className="item-value">Rs.{calculateTotalPrice(cartItems).toFixed(2)}</div>
               </div>
 
-              {/* Delivery Charge */}
               <div className="order-item">
                 <div className="item-label">Delivery Charge:</div>
                 <div className="item-value">Rs.{deliveryCharge.toFixed(2)}</div>
               </div>
 
-              {/* Total */}
               <div className="order-item">
                 <div className="item-label">Total:</div>
                 <div className="total-price">
@@ -413,7 +432,6 @@ const Shop = () => {
 
               <div className="divider"></div>
 
-              {/* Placeholder for Name & Address */}
               <div className="order-item">
                 <div className="item-label">Name:</div>
                 <div className="item-value">{customerDetails.firstName} {customerDetails.lastName}</div>

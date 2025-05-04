@@ -22,6 +22,14 @@ const Profile = () => {
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false);
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
 
+  const [review, setReview] = useState({
+    productId: "", 
+    rating: 1,
+    comment: "",
+  });
+
+  const [showReviewForm, setShowReviewForm] = useState(false); 
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,21 +38,20 @@ const Profile = () => {
       try {
         const token = localStorage.getItem("token");
         console.log("Profile token:", token);
-        
+
         const response = await axios.get("http://localhost:8000/buyer/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        
+
         console.log("Profile API response:", response.data);
-        
-        // Sort orders by quantity in descending order if orders exist
+
         const userData = response.data;
         if (userData.orders && userData.orders.length > 0) {
           userData.orders = userData.orders.sort((a, b) => b.quantity - a.quantity);
         }
-        
+        console.log("User _id:", userData.id);
         setUser(userData);
         setFormValues(userData);
       } catch (error) {
@@ -124,6 +131,52 @@ const Profile = () => {
     }
   };
 
+  const handleReviewChange = (e) => {
+    const { name, value } = e.target;
+    setReview({ ...review, [name]: value });
+  };
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!review.productId) {
+        alert("Product ID is missing.");
+        return;
+      }
+      console.log("buyerId:", user.name);
+      console.log("Review submitted for Product ID:", review.productId);
+
+      const response = await axios.post(
+        `http://localhost:8000/products/${review.productId}/review`,
+        {
+          buyerId: user.name,
+          rating: review.rating,
+          comment: review.comment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data.message === "Review added successfully!") {
+        alert("Review added successfully!");
+        setReview({ productId: "", rating: 1, comment: "" });
+        setShowReviewForm(false); 
+      }
+    } catch (error) {
+      console.error("Error adding review:", error);
+      alert("Error adding review.");
+    }
+  };
+
+  const handleProductReview = (productId) => {
+    setReview({ ...review, productId }); 
+    setShowReviewForm(true); 
+  };
+  
   return (
     <div className="profile-page">
       <Container>
@@ -140,6 +193,7 @@ const Profile = () => {
                 <>
                   <input
                     type="text"
+                    className="profile-namee"
                     name="name"
                     placeholder="Name"
                     value={formValues.name}
@@ -147,8 +201,10 @@ const Profile = () => {
                   />
                   <input
                     type="text"
+                    className="profile-addres"
                     name="address"
                     placeholder="Address"
+                    
                     value={formValues.address}
                     onChange={handleInputChange}
                   />
@@ -166,12 +222,14 @@ const Profile = () => {
                   <input
                     type="email"
                     name="email"
+                    className="profile-emaill"
                     placeholder="Email"
                     value={formValues.email}
                     onChange={handleInputChange}
                   />
                   <input
                     type="text"
+                    className="profile-phonee"
                     name="phoneNumber"
                     placeholder="Phone Number"
                     value={formValues.phoneNumber}
@@ -211,7 +269,7 @@ const Profile = () => {
           {isProfileUpdated && (
             <div className="success-message mt-2">Profile updated successfully!</div>
           )}
-
+          
           <Row className="mt-4">
             <Col>
               <div className="contact-subtitle">My Orders</div>
@@ -231,6 +289,14 @@ const Profile = () => {
                       <div className="order-total">
                         <span>Total: Rs.{(order.price * order.quantity).toFixed(2)}</span>
                       </div>
+                      <div className="review-form">
+                        <button
+                          className="custom-btn"
+                          onClick={() => handleProductReview(order.productId)} 
+                        >
+                          Leave a Review
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -239,6 +305,39 @@ const Profile = () => {
               )}
             </Col>
           </Row>
+
+          {/* Review Form */}
+          {showReviewForm && (
+            <Row className="mt-4">
+              <Col>
+                <form onSubmit={handleReviewSubmit}>
+                  <div>
+                    <label>Rating: </label>
+                    <select
+                      name="rating"
+                      value={review.rating}
+                      onChange={handleReviewChange}
+                    >
+                      {[1, 2, 3, 4, 5].map((rating) => (
+                        <option key={rating} value={rating}>
+                          {rating}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label>Comment: </label>
+                    <textarea
+                      name="comment"
+                      value={review.comment}
+                      onChange={handleReviewChange}
+                    />
+                  </div>
+                  <button type="submit" className="custom-btn">Submit Review</button>
+                </form>
+              </Col>
+            </Row>
+          )}
 
           <Row className="mt-4">
             <Col>
@@ -264,6 +363,7 @@ const Profile = () => {
                   <Col md={6}>
                     <input
                       type="password"
+                      className="profile-pasword"
                       placeholder="Old Password"
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
@@ -273,6 +373,7 @@ const Profile = () => {
                   <Col md={6}>
                     <input
                       type="password"
+                      className="profile-pasword"
                       placeholder="New Password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}

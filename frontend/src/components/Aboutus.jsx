@@ -7,25 +7,35 @@ const AboutUs = () => {
   const teamMembers = [
     {
       id: 1,
-      name: 'Sarah Johnson',
-      title: 'CEO',
+      name: 'Nouman Asad',
       image: '/placeholder-team-1.jpg',
-      bio: 'Sarah brings over 15 years of experience in the pet industry and is passionate about animal welfare.'
+      bio: 'Nouman Asad over 5 years of experience in the pet industry and is passionate about animal welfare.'
     },
     {
       id: 2,
-      name: 'Michael Chen',
-      title: 'COO',
+      name: 'Dawood Ahmed',
       image: '/placeholder-team-2.jpg',
-      bio: 'Michael oversees all operations and ensures we deliver the best quality products to our customers.'
+      bio: 'Dawood Ahmed oversees all operations and ensures we deliver the best quality products to our customers.'
     },
     {
       id: 3,
-      name: 'Emily Rodriguez',
-      title: 'CTO',
+      name: 'Areej Fatijma',
       image: '/placeholder-team-3.jpg',
-      bio: 'Emily leads our technology team and develops innovative solutions for an enhanced shopping experience.'
+      bio: 'Areej Fatima leads our technology team and develops innovative solutions for an enhanced shopping experience.'
     },
+    {
+      id: 4,
+      name: 'Ahla Asim',
+      image: '/placeholder-team-3.jpg',
+      bio: 'Ahla Asim leads our technology team and develops innovative solutions for an enhanced shopping experience.'
+    },
+    {
+      id: 5,
+      name: 'Syeda Umaima',
+      image: '/placeholder-team-3.jpg',
+      bio: 'Syeda Umaima leads our technology team and develops innovative solutions for an enhanced shopping experience.'
+    },
+    
   ];
 
   return (
