@@ -16,11 +16,9 @@ const ProductDetail = () => {
   const [reviews, setReviews] = useState([]);
   const [loginError, setLoginError] = useState("");
 
-  // determine login status
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   useEffect(() => {
-    // if not logged in, show the error banner
     if (!isLoggedIn) {
       setLoginError("Please login to add and purchase products");
     }
@@ -48,14 +46,13 @@ const ProductDetail = () => {
   if (!product) return <div>Loading...</div>;
 
   return (
-    <div className="product-detail-page">
-      {loginError && (
-        <div className="error-banner">
-          {loginError}
-        </div>
-      )}
-
       <div className="product-detail-container">
+         <div className="product-detail-page">
+          {loginError && (
+            <div className="error-banner">
+              {loginError}
+            </div>
+          )}
         <div className="product-detail-content">
           <div className="product-detail-image">
             <img src={product.image || img} alt={product.name} />
