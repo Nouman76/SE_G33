@@ -3,7 +3,19 @@
   margin: 40px auto;
   padding: 0 20px;
 }
-
+.error-banner {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+}
 .product-detail-content {
   display: flex;
   flex-wrap: wrap;
